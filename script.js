@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
         "reflection",
         "response",
         "prayer",
-        "learning"
+        "learning",
+        "tags"
     ];
 
 
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     const today = new Date();
+
 
     const year =
         today.getFullYear();
@@ -63,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // 清空编辑区域
+    // 清空输入
     // =========================
 
     function clearFields() {
@@ -97,14 +99,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         viewingDate = null;
 
+        clearFields();
+
 
         const saved =
             localStorage.getItem(
                 "devotion-" + todayKey
             );
-
-
-        clearFields();
 
 
         if (!saved) {
@@ -157,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // 保存今天
+    // 保存
     // =========================
 
     function saveTodayData() {
@@ -230,12 +231,79 @@ document.addEventListener("DOMContentLoaded", function () {
 
         renderCalendar();
 
+        showHistory();
+
     }
 
 
 
     // =========================
-    // 显示历史
+    // 创建标签显示
+    // =========================
+
+    function createTagsElement(tags) {
+
+        const container =
+            document.createElement(
+                "div"
+            );
+
+
+        container.className =
+            "history-tags";
+
+
+        if (!tags) {
+
+            return container;
+
+        }
+
+
+        const tagArray =
+            tags
+                .split(",")
+                .map(function (tag) {
+
+                    return tag.trim();
+
+                })
+                .filter(Boolean);
+
+
+        tagArray.forEach(
+            function (tag) {
+
+                const tagElement =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                tagElement.className =
+                    "tag";
+
+
+                tagElement.textContent =
+                    "#" + tag;
+
+
+                container.appendChild(
+                    tagElement
+                );
+
+            }
+        );
+
+
+        return container;
+
+    }
+
+
+
+    // =========================
+    // 历史记录
     // =========================
 
     function showHistory() {
@@ -394,12 +462,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     "history-preview";
 
 
-                if (
-                    data.reflection
-                ) {
+                const previewSource =
+                    data.reflection ||
+                    data.prayer ||
+                    "";
+
+
+                if (previewSource) {
 
                     let preview =
-                        data.reflection.replace(
+                        previewSource.replace(
                             /\s+/g,
                             " "
                         );
@@ -422,7 +494,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     previewElement.textContent =
                         preview;
 
-
                 } else {
 
                     previewElement.textContent =
@@ -435,12 +506,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     dateElement
                 );
 
+
                 item.appendChild(
                     bibleElement
                 );
 
+
                 item.appendChild(
                     previewElement
+                );
+
+
+                // 标签
+
+                item.appendChild(
+                    createTagsElement(
+                        data.tags
+                    )
                 );
 
 
@@ -812,7 +894,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // 搜索灵修
+    // 搜索
     // =========================
 
     function searchDevotions() {
@@ -923,7 +1005,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             data.reflection,
                             data.response,
                             data.prayer,
-                            data.learning
+                            data.learning,
+                            data.tags
                         ]
                         .filter(Boolean)
                         .join(" ")
@@ -1114,6 +1197,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 item.appendChild(
                     previewElement
+                );
+
+
+                item.appendChild(
+                    createTagsElement(
+                        record.data.tags
+                    )
                 );
 
 
