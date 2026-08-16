@@ -175,6 +175,10 @@ button:hover {
 }
 
 
+/* =========================
+   标签
+   ========================= */
+
 .history-tags {
     display: flex;
 
@@ -252,6 +256,10 @@ button:hover {
 }
 
 
+/* =========================
+   历史
+   ========================= */
+
 .history-section {
     margin-top: 40px;
 }
@@ -319,7 +327,9 @@ button:hover {
 }
 
 
-/* 我的灵修 */
+/* =========================
+   我的灵修
+   ========================= */
 
 .stats-grid {
     display: grid;
@@ -339,7 +349,8 @@ button:hover {
 
     border-radius: 16px;
 
-    padding: 22px 15px;
+    padding:
+        22px 15px;
 
     text-align: center;
 }
@@ -358,12 +369,90 @@ button:hover {
 }
 
 
+.small-stat {
+    font-size: 20px;
+}
+
+
 .stat-label {
     font-size: 13px;
 
     color: #8a8178;
 }
 
+
+/* =========================
+   本月完成率
+   ========================= */
+
+.progress-card {
+    background: white;
+
+    border:
+        1px solid #eee8df;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-top: 12px;
+}
+
+
+.progress-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    font-size: 14px;
+
+    color: #71695f;
+
+    margin-bottom: 12px;
+}
+
+
+.progress-title strong {
+    color: #5f584f;
+
+    font-weight: 500;
+}
+
+
+.progress-bar {
+    width: 100%;
+
+    height: 10px;
+
+    background: #eeeae4;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+.progress-fill {
+    height: 100%;
+
+    width: 0%;
+
+    background: #5f584f;
+
+    border-radius: 20px;
+
+    transition:
+        width 0.4s ease;
+}
+
+
+/* =========================
+   统计说明
+   ========================= */
 
 .stats-summary {
     background: white;
@@ -392,7 +481,99 @@ button:hover {
 }
 
 
-/* 日历 */
+/* =========================
+   灵修趋势
+   ========================= */
+
+.trend-card {
+    background: white;
+
+    border:
+        1px solid #eee8df;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-top: 12px;
+}
+
+
+.trend-card h3 {
+    margin:
+        0 0 18px;
+
+    font-size: 16px;
+
+    font-weight: 500;
+}
+
+
+.trend-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.trend-row {
+    display: grid;
+
+    grid-template-columns:
+        40px 1fr 45px;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.trend-label {
+    font-size: 13px;
+
+    color: #8a8178;
+}
+
+
+.trend-bar-area {
+    height: 9px;
+
+    background: #eeeae4;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+.trend-bar {
+    height: 100%;
+
+    width: 0%;
+
+    background: #5f584f;
+
+    border-radius: 20px;
+
+    transition:
+        width 0.4s ease;
+}
+
+
+.trend-count {
+    text-align: right;
+
+    font-size: 12px;
+
+    color: #8a8178;
+}
+
+
+/* =========================
+   日历
+   ========================= */
 
 .calendar-header {
     display: flex;
@@ -528,7 +709,9 @@ button:hover {
 }
 
 
-/* 搜索 */
+/* =========================
+   搜索
+   ========================= */
 
 .search-box {
     display: flex;
@@ -634,6 +817,10 @@ button:hover {
 }
 
 
+/* =========================
+   手机
+   ========================= */
+
 @media (max-width: 600px) {
 
     .container {
@@ -669,6 +856,16 @@ button:hover {
 
     .stat-number {
         font-size: 23px;
+    }
+
+
+    .small-stat {
+        font-size: 17px;
+    }
+
+
+    .progress-title {
+        font-size: 13px;
     }
 
 
@@ -715,6 +912,14 @@ button:hover {
             8px 12px;
 
         font-size: 13px;
+    }
+
+
+    .trend-row {
+        grid-template-columns:
+            35px 1fr 40px;
+
+        gap: 7px;
     }
 
 }
