@@ -143,16 +143,7 @@ button:hover {
 }
 
 
-#historyButton {
-    background: transparent;
-
-    color: #5f584f;
-
-    border:
-        1px solid #d8d1c8;
-}
-
-
+#historyButton,
 #todayButton {
     background: transparent;
 
@@ -178,7 +169,8 @@ button:hover {
 /* 标签提示 */
 
 .tag-tip {
-    margin: 5px 0 0;
+    margin:
+        5px 0 0;
 
     font-size: 13px;
 
@@ -219,7 +211,58 @@ button:hover {
 
 
 
-/* 灵修历史 */
+/* 标签筛选 */
+
+.tag-filters {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+}
+
+
+.tag-filter {
+    width: auto;
+
+    margin: 0;
+
+    padding:
+        9px 15px;
+
+    border-radius: 20px;
+
+    background: white;
+
+    color: #71695f;
+
+    border:
+        1px solid #d8d1c8;
+
+    font-size: 14px;
+}
+
+
+.tag-filter:hover {
+    opacity: 1;
+
+    background: #f1eee8;
+}
+
+
+.tag-filter.active {
+    background: #5f584f;
+
+    color: white;
+
+    border-color: #5f584f;
+}
+
+
+
+/* 历史 */
 
 .history-section {
     margin-top: 40px;
@@ -252,7 +295,8 @@ button:hover {
 
 
 .history-item:hover {
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     box-shadow:
         0 5px 18px
@@ -288,7 +332,7 @@ button:hover {
 
 
 
-/* 灵修日历 */
+/* 日历 */
 
 .calendar-header {
     display: flex;
@@ -378,8 +422,6 @@ button:hover {
     justify-content: center;
 
     cursor: pointer;
-
-    position: relative;
 
     background: #faf9f6;
 }
@@ -497,7 +539,8 @@ button:hover {
 
 
 .search-result-item:hover {
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     box-shadow:
         0 5px 18px
@@ -592,6 +635,14 @@ button:hover {
 
         padding:
             14px 12px;
+    }
+
+
+    .tag-filter {
+        padding:
+            8px 12px;
+
+        font-size: 13px;
     }
 
 }
