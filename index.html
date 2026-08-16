@@ -170,8 +170,6 @@
         </button>
 
 
-        <!-- 保存 / 状态提示 -->
-
         <p id="message"></p>
 
 
@@ -189,8 +187,6 @@
                 📅 灵修日历
             </h2>
 
-
-            <!-- 月份切换 -->
 
             <div class="calendar-header">
 
@@ -218,29 +214,18 @@
 
 
 
-            <!-- 星期 -->
-
             <div class="calendar-weekdays">
 
                 <div>一</div>
-
                 <div>二</div>
-
                 <div>三</div>
-
                 <div>四</div>
-
                 <div>五</div>
-
                 <div>六</div>
-
                 <div>日</div>
 
             </div>
 
-
-
-            <!-- 日期 -->
 
             <div
                 id="calendar"
@@ -251,6 +236,53 @@
             <p class="calendar-tip">
                 ● 有灵修记录　　点击日期查看
             </p>
+
+        </section>
+
+
+
+        <!-- =========================
+             搜索灵修
+             ========================= -->
+
+        <section
+            id="searchSection"
+            class="history-section"
+        >
+
+            <h2>
+                🔍 搜索灵修
+            </h2>
+
+
+            <div class="search-box">
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="搜索经文、领受、祷告、学习……"
+                >
+
+                <button
+                    id="searchButton"
+                    type="button"
+                >
+                    搜索
+                </button>
+
+            </div>
+
+
+            <p
+                id="searchMessage"
+                class="search-message"
+            ></p>
+
+
+            <div
+                id="searchResults"
+                class="search-results"
+            ></div>
 
         </section>
 
@@ -279,12 +311,7 @@
 
 
 
-    <!-- =========================
-         JavaScript
-         ========================= -->
-
     <script src="script.js"></script>
-
 
 </body>
 
