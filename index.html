@@ -1,23 +1,47 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>今日灵修</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
     <main class="container">
 
+
+        <!-- 页面标题 -->
+
         <header>
-            <p class="date" id="today"></p>
+
+            <p
+                class="date"
+                id="today"
+            ></p>
+
             <h1>今日灵修</h1>
-            <p class="subtitle">在主里面安静、思想、回应</p>
+
+            <p class="subtitle">
+                在主里面安静、思想、回应
+            </p>
+
         </header>
+
+
+
+        <!-- 今日经文 -->
 
         <section class="card">
 
@@ -35,6 +59,121 @@
             ></textarea>
 
         </section>
+
+
+
+        <!-- 今日领受 -->
+
+        <section class="card">
+
+            <h2>
+                今天神让我看见什么？
+            </h2>
+
+            <textarea
+                id="reflection"
+                placeholder="写下你的领受……"
+            ></textarea>
+
+        </section>
+
+
+
+        <!-- 今日回应 -->
+
+        <section class="card">
+
+            <h2>
+                今天我要怎样回应？
+            </h2>
+
+            <textarea
+                id="response"
+                placeholder="写下今天的回应……"
+            ></textarea>
+
+        </section>
+
+
+
+        <!-- 今日祷告 -->
+
+        <section class="card">
+
+            <h2>今日祷告</h2>
+
+            <textarea
+                id="prayer"
+                placeholder="写下今天的祷告……"
+            ></textarea>
+
+        </section>
+
+
+
+        <!-- 今日学习 -->
+
+        <section class="card">
+
+            <h2>今天学到的</h2>
+
+            <textarea
+                id="learning"
+                placeholder="记录今天学习到的内容……"
+            ></textarea>
+
+        </section>
+
+
+
+        <!-- 保存按钮 -->
+
+        <button id="saveButton">
+            保存今天的灵修
+        </button>
+
+
+
+        <!-- 历史记录按钮 -->
+
+        <button id="historyButton">
+            查看灵修历史
+        </button>
+
+
+
+        <!-- 保存提示 -->
+
+        <p id="message"></p>
+
+
+
+        <!-- 历史记录 -->
+
+        <section
+            id="historySection"
+            class="history-section"
+        >
+
+            <h2>📖 灵修历史</h2>
+
+            <div id="historyList"></div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- JavaScript -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>        </section>
 
         <section class="card">
 
