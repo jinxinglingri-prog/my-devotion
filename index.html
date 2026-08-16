@@ -21,8 +21,7 @@
 
     <main class="container">
 
-
-        <!-- 页面标题 -->
+        <!-- 标题 -->
 
         <header>
 
@@ -130,7 +129,7 @@
 
 
 
-        <!-- 今日标签 -->
+        <!-- 标签 -->
 
         <section class="card">
 
@@ -152,7 +151,7 @@
 
 
 
-        <!-- 操作按钮 -->
+        <!-- 保存 -->
 
         <button
             id="saveButton"
@@ -162,6 +161,9 @@
         </button>
 
 
+
+        <!-- 历史 -->
+
         <button
             id="historyButton"
             type="button"
@@ -169,6 +171,9 @@
             查看灵修历史
         </button>
 
+
+
+        <!-- 返回今天 -->
 
         <button
             id="todayButton"
@@ -178,15 +183,16 @@
         </button>
 
 
+
         <p id="message"></p>
 
 
 
-        <!-- 灵修日历 -->
+        <!-- 日历 -->
 
         <section
-            id="calendarSection"
             class="history-section"
+            id="calendarSection"
         >
 
             <h2>
@@ -247,11 +253,11 @@
 
 
 
-        <!-- 搜索灵修 -->
+        <!-- 搜索 -->
 
         <section
-            id="searchSection"
             class="history-section"
+            id="searchSection"
         >
 
             <h2>
@@ -292,11 +298,32 @@
 
 
 
-        <!-- 灵修历史 -->
+        <!-- 标签筛选 -->
 
         <section
-            id="historySection"
             class="history-section"
+            id="tagFilterSection"
+        >
+
+            <h2>
+                🏷️ 按主题查看
+            </h2>
+
+
+            <div
+                id="tagFilters"
+                class="tag-filters"
+            ></div>
+
+        </section>
+
+
+
+        <!-- 历史记录 -->
+
+        <section
+            class="history-section"
+            id="historySection"
         >
 
             <h2>
