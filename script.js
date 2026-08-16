@@ -123,8 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const records = [];
 
 
-        // 找出所有以前保存的灵修
-
         for (
             let i = 0;
             i < localStorage.length;
@@ -152,12 +150,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // 最新日期放在最上面
-
         records.sort().reverse();
 
-
-        // 没有记录
 
         if (records.length === 0) {
 
@@ -169,9 +163,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // 显示日期
-
         records.forEach(function (date) {
+
+            const saved =
+                localStorage.getItem(
+                    "devotion-" + date
+                );
+
+            let data = {};
+
+            try {
+                data = JSON.parse(saved);
+            } catch (error) {
+                data = {};
+            }
+
 
             const item =
                 document.createElement("div");
@@ -179,8 +185,79 @@ document.addEventListener("DOMContentLoaded", function () {
             item.className =
                 "history-item";
 
-            item.textContent =
-                date;
+
+            // 日期
+
+            const dateElement =
+                document.createElement("div");
+
+            dateElement.className =
+                "history-date";
+
+            const dateObject =
+                new Date(date + "T12:00:00");
+
+            dateElement.textContent =
+                dateObject.toLocaleDateString(
+                    "zh-CN",
+                    {
+                        month: "long",
+                        day: "numeric",
+                        weekday: "long"
+                    }
+                );
+
+
+            // 经文
+
+            const bibleElement =
+                document.createElement("div");
+
+            bibleElement.className =
+                "history-bible";
+
+            bibleElement.textContent =
+                data.bibleReference ||
+                "还没有填写经文";
+
+
+            // 领受预览
+
+            const previewElement =
+                document.createElement("div");
+
+            previewElement.className =
+                "history-preview";
+
+            if (data.reflection) {
+
+                let preview =
+                    data.reflection.replace(
+                        /\s+/g,
+                        " "
+                    );
+
+                if (preview.length > 80) {
+                    preview =
+                        preview.substring(0, 80) +
+                        "……";
+                }
+
+                previewElement.textContent =
+                    preview;
+
+            } else {
+
+                previewElement.textContent =
+                    "还没有记录今天的领受";
+
+            }
+
+
+            item.appendChild(dateElement);
+            item.appendChild(bibleElement);
+            item.appendChild(previewElement);
+
 
             item.addEventListener(
                 "click",
@@ -190,6 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 }
             );
+
 
             historyList.appendChild(item);
 
@@ -297,8 +375,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-
-    // 页面打开时读取今天的记录
 
     loadTodayData();
 
