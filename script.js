@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "learning"
     ];
 
-
     let calendarDate = new Date();
+
+    let viewingDate = null;
 
 
     const today = new Date();
@@ -45,17 +46,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    // =========================
+    // 清空编辑区域
+    // =========================
+
+    function clearFields() {
+
+        fields.forEach(function (field) {
+
+            const element =
+                document.getElementById(field);
+
+            if (element) {
+                element.value = "";
+            }
+
+        });
+
+    }
+
 
     // =========================
-    // 读取今天的灵修
+    // 读取今天
     // =========================
 
     function loadTodayData() {
+
+        viewingDate = null;
 
         const saved =
             localStorage.getItem(
                 "devotion-" + todayKey
             );
+
+        clearFields();
 
         if (!saved) {
             return;
@@ -95,12 +119,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     // =========================
-    // 保存今天的灵修
+    // 保存今天
     // =========================
 
     function saveTodayData() {
+
+        // 如果正在查看历史记录，
+        // 不允许直接保存成今天
+
+        if (viewingDate !== null) {
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+            if (message) {
+
+                message.textContent =
+                    "⚠️ 你正在查看历史记录，请先点击“返回今天”。";
+
+            }
+
+            return;
+        }
+
 
         const data = {};
 
@@ -127,7 +171,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const message =
-            document.getElementById("message");
+            document.getElementById(
+                "message"
+            );
 
 
         if (message) {
@@ -143,9 +189,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     // =========================
-    // 显示历史
+    // 查看历史
     // =========================
 
     function showHistory() {
@@ -255,6 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 dateObject.toLocaleDateString(
                     "zh-CN",
                     {
+                        year: "numeric",
                         month: "long",
                         day: "numeric",
                         weekday: "long"
@@ -264,7 +310,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const bibleElement =
                 document.createElement("div");
-
 
             bibleElement.className =
                 "history-bible";
@@ -277,7 +322,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const previewElement =
                 document.createElement("div");
-
 
             previewElement.className =
                 "history-preview";
@@ -346,7 +390,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     // =========================
     // 打开历史记录
     // =========================
@@ -368,6 +411,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data =
                 JSON.parse(saved);
+
+
+            viewingDate = date;
 
 
             fields.forEach(function (field) {
@@ -400,9 +446,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (message) {
 
                 message.textContent =
-                    "✓ 已打开 " +
+                    "📖 正在查看 " +
                     date +
-                    " 的灵修记录。";
+                    " 的灵修记录";
 
             }
 
@@ -424,6 +470,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+
+    // =========================
+    // 返回今天
+    // =========================
+
+    function returnToToday() {
+
+        loadTodayData();
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        if (message) {
+
+            message.textContent =
+                "✨ 已返回今天，可以继续写灵修了。";
+
+        }
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
 
 
     // =========================
@@ -452,35 +528,33 @@ document.addEventListener("DOMContentLoaded", function () {
         calendar.innerHTML = "";
 
 
-        const year =
+        const calendarYear =
             calendarDate.getFullYear();
 
 
-        const month =
+        const calendarMonth =
             calendarDate.getMonth();
 
 
         title.textContent =
-            `${year}年${month + 1}月`;
+            `${calendarYear}年${calendarMonth + 1}月`;
 
 
         const firstDay =
             new Date(
-                year,
-                month,
+                calendarYear,
+                calendarMonth,
                 1
             );
 
 
         const lastDay =
             new Date(
-                year,
-                month + 1,
+                calendarYear,
+                calendarMonth + 1,
                 0
             );
 
-
-        // 星期一作为第一天
 
         let startDay =
             firstDay.getDay();
@@ -490,8 +564,6 @@ document.addEventListener("DOMContentLoaded", function () {
             startDay = 7;
         }
 
-
-        // 前面的空白
 
         for (
             let i = 1;
@@ -514,12 +586,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // 日期
-
         for (
-            let day = 1;
-            day <= lastDay.getDate();
-            day++
+            let calendarDay = 1;
+            calendarDay <= lastDay.getDate();
+            calendarDay++
         ) {
 
             const cell =
@@ -533,10 +603,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             const dateKey =
-                `${year}-${String(
-                    month + 1
+                `${calendarYear}-${String(
+                    calendarMonth + 1
                 ).padStart(2, "0")}-${String(
-                    day
+                    calendarDay
                 ).padStart(2, "0")}`;
 
 
@@ -551,15 +621,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             number.textContent =
-                day;
+                calendarDay;
 
 
             cell.appendChild(
                 number
             );
 
-
-            // 有灵修记录
 
             if (
                 localStorage.getItem(
@@ -588,8 +656,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            // 今天
-
             if (
                 dateKey === todayKey
             ) {
@@ -600,8 +666,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-
-            // 点击日期
 
             cell.addEventListener(
                 "click",
@@ -650,9 +714,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     // =========================
-    // 上一个月
+    // 上个月
     // =========================
 
     const prevMonth =
@@ -679,9 +742,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     // =========================
-    // 下一个月
+    // 下个月
     // =========================
 
     const nextMonth =
@@ -708,7 +770,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     // =========================
     // 保存按钮
     // =========================
@@ -727,7 +788,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     }
-
 
 
     // =========================
@@ -749,6 +809,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+
+    // =========================
+    // 返回今天按钮
+    // =========================
+
+    const todayButton =
+        document.getElementById(
+            "todayButton"
+        );
+
+
+    if (todayButton) {
+
+        todayButton.addEventListener(
+            "click",
+            returnToToday
+        );
+
+    }
 
 
     // 初始化
