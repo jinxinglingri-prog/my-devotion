@@ -2,10 +2,14 @@
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
+
     background: #f7f5f0;
+
     color: #3f3b36;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -14,147 +18,486 @@ body {
         sans-serif;
 }
 
+
 .container {
     width: min(720px, 92%);
+
     margin: 0 auto;
+
     padding: 50px 0 80px;
 }
 
+
 header {
     text-align: center;
+
     margin-bottom: 35px;
 }
 
+
 .date {
     font-size: 14px;
+
     color: #8a8178;
 }
 
+
 h1 {
     margin: 8px 0;
+
     font-size: 34px;
+
     font-weight: 500;
 }
+
 
 .subtitle {
     color: #8a8178;
 }
 
+
 .card {
     background: white;
+
     border-radius: 16px;
+
     padding: 25px;
+
     margin-bottom: 20px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+
+    box-shadow:
+        0 3px 15px
+        rgba(0, 0, 0, 0.04);
 }
+
 
 h2 {
     font-size: 19px;
+
     font-weight: 500;
+
     margin-top: 0;
 }
+
 
 input,
 textarea {
     width: 100%;
-    border: 1px solid #e5e0d8;
+
+    border:
+        1px solid #e5e0d8;
+
     border-radius: 10px;
+
     padding: 14px;
+
     font-size: 16px;
+
     font-family: inherit;
+
     outline: none;
 }
+
 
 input {
     margin-bottom: 12px;
 }
 
+
 textarea {
     min-height: 130px;
+
     resize: vertical;
 }
+
 
 input:focus,
 textarea:focus {
     border-color: #aaa198;
 }
 
+
 button {
     width: 100%;
+
     padding: 16px;
+
     border: none;
+
     border-radius: 12px;
+
     background: #5f584f;
+
     color: white;
+
     font-size: 16px;
+
     cursor: pointer;
+
     margin-bottom: 12px;
 }
+
 
 button:hover {
     opacity: 0.9;
 }
 
+
 #historyButton {
     background: transparent;
+
     color: #5f584f;
-    border: 1px solid #d8d1c8;
+
+    border:
+        1px solid #d8d1c8;
 }
+
+
+#todayButton {
+    background: transparent;
+
+    color: #5f584f;
+
+    border:
+        1px solid #d8d1c8;
+}
+
 
 #message {
     text-align: center;
+
     color: #777;
+
     margin-top: 15px;
+
     min-height: 22px;
 }
 
 
-/* 灵修历史 */
+
+/* =========================
+   灵修历史
+   ========================= */
 
 .history-section {
     margin-top: 40px;
 }
 
+
 .history-section h2 {
     margin-bottom: 18px;
 }
 
+
 .history-item {
     background: white;
+
     border-radius: 16px;
+
     padding: 20px;
+
     margin-bottom: 12px;
+
     cursor: pointer;
-    border: 1px solid #eee8df;
-    transition: transform 0.15s ease,
-                box-shadow 0.15s ease;
+
+    border:
+        1px solid #eee8df;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
+
 
 .history-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+
+    box-shadow:
+        0 5px 18px
+        rgba(0, 0, 0, 0.06);
 }
+
 
 .history-date {
     font-size: 17px;
+
     font-weight: 500;
+
     margin-bottom: 7px;
 }
 
+
 .history-bible {
     font-size: 14px;
+
     color: #71695f;
+
     margin-bottom: 10px;
 }
 
+
 .history-preview {
     font-size: 14px;
+
     line-height: 1.7;
+
     color: #8a8178;
 }
 
 
-/* 手机 */
+
+/* =========================
+   灵修日历
+   ========================= */
+
+.calendar-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+
+#calendarTitle {
+    font-size: 18px;
+
+    font-weight: 500;
+}
+
+
+.calendar-nav {
+    width: 42px;
+
+    height: 42px;
+
+    padding: 0;
+
+    margin: 0;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #5f584f;
+
+    border:
+        1px solid #d8d1c8;
+
+    font-size: 26px;
+
+    line-height: 1;
+}
+
+
+.calendar-nav:hover {
+    background: #f7f5f0;
+}
+
+
+.calendar-weekdays,
+.calendar {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 6px;
+}
+
+
+.calendar-weekdays {
+    margin-bottom: 6px;
+}
+
+
+.calendar-weekdays div {
+    text-align: center;
+
+    font-size: 13px;
+
+    color: #999087;
+
+    padding: 8px 0;
+}
+
+
+.calendar-day {
+    min-height: 52px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    position: relative;
+
+    background: #faf9f6;
+}
+
+
+.calendar-day:hover {
+    background: #f0ece6;
+}
+
+
+.calendar-day.empty {
+    background: transparent;
+
+    cursor: default;
+}
+
+
+.calendar-number {
+    font-size: 15px;
+}
+
+
+.calendar-day.today {
+    border:
+        1px solid #8f877e;
+}
+
+
+.calendar-dot {
+    font-size: 7px;
+
+    margin-top: 3px;
+}
+
+
+.calendar-tip {
+    text-align: center;
+
+    color: #999087;
+
+    font-size: 13px;
+
+    margin-top: 15px;
+}
+
+
+
+/* =========================
+   搜索
+   ========================= */
+
+.search-box {
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+
+.search-box input {
+    flex: 1;
+
+    margin-bottom: 0;
+}
+
+
+.search-box button {
+    width: auto;
+
+    min-width: 90px;
+
+    margin-bottom: 0;
+
+    padding:
+        14px 20px;
+}
+
+
+.search-message {
+    text-align: center;
+
+    color: #8a8178;
+
+    font-size: 14px;
+
+    min-height: 20px;
+
+    margin:
+        15px 0 10px;
+}
+
+
+.search-results {
+    margin-top: 10px;
+}
+
+
+.search-result-item {
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 12px;
+
+    cursor: pointer;
+
+    border:
+        1px solid #eee8df;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.search-result-item:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 18px
+        rgba(0, 0, 0, 0.06);
+}
+
+
+.search-result-date {
+    font-size: 16px;
+
+    font-weight: 500;
+
+    margin-bottom: 7px;
+}
+
+
+.search-result-bible {
+    font-size: 14px;
+
+    color: #71695f;
+
+    margin-bottom: 9px;
+}
+
+
+.search-result-preview {
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    color: #8a8178;
+}
+
+
+
+/* =========================
+   手机
+   ========================= */
 
 @media (max-width: 600px) {
 
@@ -162,137 +505,57 @@ button:hover {
         padding-top: 30px;
     }
 
+
     h1 {
         font-size: 28px;
     }
+
 
     .card {
         padding: 20px;
     }
 
+
     .history-item {
         padding: 17px;
     }
-}
-/* =========================
-   灵修日历
-   ========================= */
 
-.calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-#calendarTitle {
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.calendar-nav {
-    width: 42px;
-    height: 42px;
-    padding: 0;
-    margin: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: #5f584f;
-    border: 1px solid #d8d1c8;
-    font-size: 26px;
-    line-height: 1;
-}
-
-.calendar-nav:hover {
-    background: #f7f5f0;
-}
-
-.calendar-weekdays,
-.calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-}
-
-.calendar-weekdays {
-    margin-bottom: 6px;
-}
-
-.calendar-weekdays div {
-    text-align: center;
-    font-size: 13px;
-    color: #999087;
-    padding: 8px 0;
-}
-
-.calendar-day {
-    min-height: 52px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    background: #faf9f6;
-}
-
-.calendar-day:hover {
-    background: #f0ece6;
-}
-
-.calendar-day.empty {
-    background: transparent;
-    cursor: default;
-}
-
-.calendar-number {
-    font-size: 15px;
-}
-
-.calendar-day.today {
-    border: 1px solid #8f877e;
-}
-
-.calendar-dot {
-    font-size: 7px;
-    margin-top: 3px;
-}
-
-.calendar-tip {
-    text-align: center;
-    color: #999087;
-    font-size: 13px;
-    margin-top: 15px;
-}
-
-
-/* 手机 */
-
-@media (max-width: 600px) {
 
     .calendar-weekdays,
     .calendar {
         gap: 3px;
     }
 
+
     .calendar-day {
         min-height: 44px;
+
         border-radius: 8px;
     }
+
 
     .calendar-number {
         font-size: 14px;
     }
 
+
     .calendar-nav {
         width: 38px;
+
         height: 38px;
     }
 
-}
-#todayButton {
-    background: transparent;
-    color: #5f584f;
-    border: 1px solid #d8d1c8;
+
+    .search-box {
+        gap: 7px;
+    }
+
+
+    .search-box button {
+        min-width: 72px;
+
+        padding:
+            14px 12px;
+    }
+
 }
