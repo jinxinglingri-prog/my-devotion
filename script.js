@@ -1,53 +1,95 @@
-const fields = [
-    "bibleReference",
-    "bibleText",
-    "reflection",
-    "response",
-    "prayer",
-    "learning"
-];
+document.addEventListener("DOMContentLoaded", function () {
 
-const today = new Date();
+    const fields = [
+        "bibleReference",
+        "bibleText",
+        "reflection",
+        "response",
+        "prayer",
+        "learning"
+    ];
 
-const dateString = today.toLocaleDateString("zh-CN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    weekday: "long"
-});
+    const today = new Date();
 
-document.getElementById("today").textContent = dateString;
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
 
-function loadData() {
+    const todayKey = `${year}-${month}-${day}`;
 
-    fields.forEach(function(field) {
+    const dateString = today.toLocaleDateString("zh-CN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "long"
+    });
 
-        const saved = localStorage.getItem(field);
+    document.getElementById("today").textContent = dateString;
 
-        if (saved !== null) {
-            document.getElementById(field).value = saved;
+
+    function getTodayData() {
+
+        const data = {};
+
+        fields.forEach(function (field) {
+
+            const element = document.getElementById(field);
+
+            if (element) {
+                data[field] = element.value;
+            }
+
+        });
+
+        return data;
+    }
+
+
+    function loadTodayData() {
+
+        const saved = localStorage.getItem("devotion-" + todayKey);
+
+        if (!saved) {
+            return;
         }
 
-    });
-}
+        const data = JSON.parse(saved);
 
-function saveData() {
+        fields.forEach(function (field) {
 
-    fields.forEach(function(field) {
+            const element = document.getElementById(field);
 
-        const value = document.getElementById(field).value;
+            if (element && data[field] !== undefined) {
+                element.value = data[field];
+            }
 
-        localStorage.setItem(field, value);
+        });
+    }
 
-    });
 
-    document.getElementById("message").textContent =
-        "今天的灵修已经保存。";
+    function saveTodayData() {
 
-}
+        const data = getTodayData();
 
-document
-    .getElementById("saveButton")
-    .addEventListener("click", saveData);
+        localStorage.setItem(
+            "devotion-" + todayKey,
+            JSON.stringify(data)
+        );
 
-loadData();
+        const message = document.getElementById("message");
+
+        if (message) {
+            message.textContent =
+                "✓ 今天的灵修已经保存。";
+        }
+    }
+
+
+    document
+        .getElementById("saveButton")
+        .addEventListener("click", saveTodayData);
+
+
+    loadTodayData();
+
+});
