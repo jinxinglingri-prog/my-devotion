@@ -291,3 +291,8 @@ button:hover {
     }
 
 }
+#todayButton {
+    background: transparent;
+    color: #5f584f;
+    border: 1px solid #d8d1c8;
+}
