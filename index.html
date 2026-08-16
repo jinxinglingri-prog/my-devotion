@@ -22,7 +22,9 @@
     <main class="container">
 
 
-        <!-- 页面标题 -->
+        <!-- =========================
+             页面标题
+             ========================= -->
 
         <header>
 
@@ -41,7 +43,9 @@
 
 
 
-        <!-- 今日经文 -->
+        <!-- =========================
+             今日经文
+             ========================= -->
 
         <section class="card">
 
@@ -62,11 +66,15 @@
 
 
 
-        <!-- 今日领受 -->
+        <!-- =========================
+             今日领受
+             ========================= -->
 
         <section class="card">
 
-            <h2>今天神让我看见什么？</h2>
+            <h2>
+                今天神让我看见什么？
+            </h2>
 
             <textarea
                 id="reflection"
@@ -77,11 +85,15 @@
 
 
 
-        <!-- 今日回应 -->
+        <!-- =========================
+             今日回应
+             ========================= -->
 
         <section class="card">
 
-            <h2>今天我要怎样回应？</h2>
+            <h2>
+                今天我要怎样回应？
+            </h2>
 
             <textarea
                 id="response"
@@ -92,11 +104,15 @@
 
 
 
-        <!-- 今日祷告 -->
+        <!-- =========================
+             今日祷告
+             ========================= -->
 
         <section class="card">
 
-            <h2>今日祷告</h2>
+            <h2>
+                今日祷告
+            </h2>
 
             <textarea
                 id="prayer"
@@ -107,11 +123,15 @@
 
 
 
-        <!-- 今日学习 -->
+        <!-- =========================
+             今日学习
+             ========================= -->
 
         <section class="card">
 
-            <h2>今天学到的</h2>
+            <h2>
+                今天学到的
+            </h2>
 
             <textarea
                 id="learning"
@@ -122,47 +142,74 @@
 
 
 
-        <!-- 保存 -->
+        <!-- =========================
+             操作按钮
+             ========================= -->
 
-        <button id="saveButton">
+        <button
+            id="saveButton"
+            type="button"
+        >
             保存今天的灵修
         </button>
 
 
-        <!-- 历史 -->
-
-        <button id="historyButton">
+        <button
+            id="historyButton"
+            type="button"
+        >
             查看灵修历史
         </button>
 
+
+        <button
+            id="todayButton"
+            type="button"
+        >
+            ✨ 返回今天
+        </button>
+
+
+        <!-- 保存 / 状态提示 -->
 
         <p id="message"></p>
 
 
 
-        <!-- 灵修日历 -->
+        <!-- =========================
+             灵修日历
+             ========================= -->
 
         <section
             id="calendarSection"
             class="history-section"
         >
 
-            <h2>📅 灵修日历</h2>
+            <h2>
+                📅 灵修日历
+            </h2>
+
+
+            <!-- 月份切换 -->
 
             <div class="calendar-header">
 
                 <button
                     id="prevMonth"
                     class="calendar-nav"
+                    type="button"
                 >
                     ‹
                 </button>
 
+
                 <div id="calendarTitle"></div>
+
 
                 <button
                     id="nextMonth"
                     class="calendar-nav"
+                    type="button"
                 >
                     ›
                 </button>
@@ -170,18 +217,30 @@
             </div>
 
 
+
+            <!-- 星期 -->
+
             <div class="calendar-weekdays">
 
                 <div>一</div>
+
                 <div>二</div>
+
                 <div>三</div>
+
                 <div>四</div>
+
                 <div>五</div>
+
                 <div>六</div>
+
                 <div>日</div>
 
             </div>
 
+
+
+            <!-- 日期 -->
 
             <div
                 id="calendar"
@@ -197,14 +256,19 @@
 
 
 
-        <!-- 灵修历史 -->
+        <!-- =========================
+             灵修历史
+             ========================= -->
 
         <section
             id="historySection"
             class="history-section"
         >
 
-            <h2>📖 灵修历史</h2>
+            <h2>
+                📖 灵修历史
+            </h2>
+
 
             <div id="historyList"></div>
 
@@ -215,7 +279,12 @@
 
 
 
+    <!-- =========================
+         JavaScript
+         ========================= -->
+
     <script src="script.js"></script>
+
 
 </body>
 
