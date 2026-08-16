@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -13,15 +12,12 @@
     <title>今日灵修</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 
 <body>
 
     <main class="container">
-
-        <!-- 标题 -->
 
         <header>
 
@@ -37,7 +33,6 @@
             </p>
 
         </header>
-
 
 
         <!-- 今日经文 -->
@@ -60,7 +55,6 @@
         </section>
 
 
-
         <!-- 今日领受 -->
 
         <section class="card">
@@ -75,7 +69,6 @@
             ></textarea>
 
         </section>
-
 
 
         <!-- 今日回应 -->
@@ -94,7 +87,6 @@
         </section>
 
 
-
         <!-- 今日祷告 -->
 
         <section class="card">
@@ -111,7 +103,6 @@
         </section>
 
 
-
         <!-- 今日学习 -->
 
         <section class="card">
@@ -126,7 +117,6 @@
             ></textarea>
 
         </section>
-
 
 
         <!-- 标签 -->
@@ -150,7 +140,6 @@
         </section>
 
 
-
         <!-- 保存 -->
 
         <button
@@ -159,7 +148,6 @@
         >
             保存今天的灵修
         </button>
-
 
 
         <!-- 历史 -->
@@ -172,7 +160,6 @@
         </button>
 
 
-
         <!-- 返回今天 -->
 
         <button
@@ -183,9 +170,98 @@
         </button>
 
 
-
         <p id="message"></p>
 
+
+        <!-- 我的灵修 -->
+
+        <section
+            class="history-section"
+            id="statsSection"
+        >
+
+            <h2>
+                📊 我的灵修
+            </h2>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div
+                        class="stat-number"
+                        id="totalDays"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        累计灵修
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div
+                        class="stat-number"
+                        id="monthDays"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        本月灵修
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div
+                        class="stat-number"
+                        id="streakDays"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        连续灵修
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div
+                        class="stat-number"
+                        id="topTag"
+                    >
+                        —
+                    </div>
+
+                    <div class="stat-label">
+                        最常主题
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats-summary">
+
+                <p id="statsMessage">
+                    每一天的记录，都会成为你与主同行的足迹。
+                </p>
+
+            </div>
+
+        </section>
 
 
         <!-- 日历 -->
@@ -225,7 +301,6 @@
             </div>
 
 
-
             <div class="calendar-weekdays">
 
                 <div>一</div>
@@ -250,7 +325,6 @@
             </p>
 
         </section>
-
 
 
         <!-- 搜索 -->
@@ -297,7 +371,6 @@
         </section>
 
 
-
         <!-- 标签筛选 -->
 
         <section
@@ -318,8 +391,7 @@
         </section>
 
 
-
-        <!-- 历史记录 -->
+        <!-- 历史 -->
 
         <section
             class="history-section"
@@ -335,9 +407,7 @@
 
         </section>
 
-
     </main>
-
 
 
     <script src="script.js"></script>
