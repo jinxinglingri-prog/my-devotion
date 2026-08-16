@@ -23,10 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
         today.getFullYear();
 
     const month =
-        String(today.getMonth() + 1).padStart(2, "0");
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
 
     const day =
-        String(today.getDate()).padStart(2, "0");
+        String(
+            today.getDate()
+        ).padStart(2, "0");
 
 
     const todayKey =
@@ -50,13 +54,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     if (todayElement) {
-        todayElement.textContent = dateString;
+
+        todayElement.textContent =
+            dateString;
+
     }
 
+
+
+    // =========================
+    // 获取所有记录
+    // =========================
 
     function getRecords() {
 
         const records = [];
+
 
         for (
             let i = 0;
@@ -67,15 +80,23 @@ document.addEventListener("DOMContentLoaded", function () {
             const key =
                 localStorage.key(i);
 
+
             if (
                 !key ||
                 !key.startsWith("devotion-")
             ) {
+
                 continue;
+
             }
 
+
             const date =
-                key.replace("devotion-", "");
+                key.replace(
+                    "devotion-",
+                    ""
+                );
+
 
             try {
 
@@ -84,10 +105,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         localStorage.getItem(key)
                     );
 
+
                 records.push({
                     date: date,
                     data: data
                 });
+
 
             } catch (error) {
 
@@ -100,33 +123,60 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
-        records.sort(function (a, b) {
-            return b.date.localeCompare(a.date);
-        });
+
+        records.sort(
+            function (a, b) {
+
+                return b.date.localeCompare(
+                    a.date
+                );
+
+            }
+        );
+
 
         return records;
+
     }
 
+
+
+    // =========================
+    // 清空输入框
+    // =========================
 
     function clearFields() {
 
-        fields.forEach(function (field) {
+        fields.forEach(
+            function (field) {
 
-            const element =
-                document.getElementById(field);
+                const element =
+                    document.getElementById(
+                        field
+                    );
 
-            if (element) {
-                element.value = "";
+
+                if (element) {
+
+                    element.value = "";
+
+                }
+
             }
-
-        });
+        );
 
     }
 
+
+
+    // =========================
+    // 读取今天
+    // =========================
 
     function loadTodayData() {
 
         viewingDate = null;
+
 
         clearFields();
 
@@ -138,7 +188,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!saved) {
+
             return;
+
         }
 
 
@@ -148,22 +200,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 JSON.parse(saved);
 
 
-            fields.forEach(function (field) {
+            fields.forEach(
+                function (field) {
 
-                const element =
-                    document.getElementById(field);
+                    const element =
+                        document.getElementById(
+                            field
+                        );
 
-                if (
-                    element &&
-                    data[field] !== undefined
-                ) {
 
-                    element.value =
-                        data[field];
+                    if (
+                        element &&
+                        data[field] !== undefined
+                    ) {
+
+                        element.value =
+                            data[field];
+
+                    }
 
                 }
+            );
 
-            });
 
         } catch (error) {
 
@@ -177,36 +235,55 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+    // =========================
+    // 保存今天
+    // =========================
+
     function saveTodayData() {
 
         if (viewingDate !== null) {
 
             const message =
-                document.getElementById("message");
+                document.getElementById(
+                    "message"
+                );
+
 
             if (message) {
+
                 message.textContent =
                     "⚠️ 请先点击“返回今天”。";
+
             }
 
+
             return;
+
         }
 
 
         const data = {};
 
 
-        fields.forEach(function (field) {
+        fields.forEach(
+            function (field) {
 
-            const element =
-                document.getElementById(field);
+                const element =
+                    document.getElementById(
+                        field
+                    );
 
-            if (element) {
-                data[field] =
-                    element.value;
+
+                if (element) {
+
+                    data[field] =
+                        element.value;
+
+                }
+
             }
-
-        });
+        );
 
 
         localStorage.setItem(
@@ -216,12 +293,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const message =
-            document.getElementById("message");
+            document.getElementById(
+                "message"
+            );
 
 
         if (message) {
+
             message.textContent =
                 "✓ 今天的灵修已经保存。";
+
         }
 
 
@@ -236,77 +317,119 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+    // =========================
+    // 标签
+    // =========================
+
     function createTagsElement(tags) {
 
         const container =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         container.className =
             "history-tags";
 
 
         if (!tags) {
+
             return container;
+
         }
 
 
         const tagArray =
             tags
                 .split(",")
-                .map(function (tag) {
-                    return tag.trim();
-                })
+                .map(
+                    function (tag) {
+
+                        return tag.trim();
+
+                    }
+                )
                 .filter(Boolean);
 
 
-        tagArray.forEach(function (tag) {
+        tagArray.forEach(
+            function (tag) {
 
-            const element =
-                document.createElement("span");
+                const element =
+                    document.createElement(
+                        "span"
+                    );
 
-            element.className = "tag";
 
-            element.textContent =
-                "#" + tag;
+                element.className =
+                    "tag";
 
-            container.appendChild(element);
 
-        });
+                element.textContent =
+                    "#" + tag;
+
+
+                container.appendChild(
+                    element
+                );
+
+            }
+        );
 
 
         return container;
+
     }
+
 
 
     function getAllTags() {
 
         const tags = new Set();
 
-        const records = getRecords();
+
+        const records =
+            getRecords();
 
 
-        records.forEach(function (record) {
+        records.forEach(
+            function (record) {
 
-            if (!record.data.tags) {
-                return;
+                if (!record.data.tags) {
+
+                    return;
+
+                }
+
+
+                record.data.tags
+                    .split(",")
+                    .map(
+                        function (tag) {
+
+                            return tag.trim();
+
+                        }
+                    )
+                    .filter(Boolean)
+                    .forEach(
+                        function (tag) {
+
+                            tags.add(tag);
+
+                        }
+                    );
+
             }
-
-
-            record.data.tags
-                .split(",")
-                .map(function (tag) {
-                    return tag.trim();
-                })
-                .filter(Boolean)
-                .forEach(function (tag) {
-                    tags.add(tag);
-                });
-
-        });
+        );
 
 
         return Array.from(tags).sort();
+
     }
+
 
 
     function renderTagFilters() {
@@ -318,7 +441,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!container) {
+
             return;
+
         }
 
 
@@ -326,7 +451,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const allButton =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
 
         allButton.type = "button";
@@ -346,6 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     allButton
                 );
 
+
                 showHistory();
 
             }
@@ -357,40 +485,50 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        getAllTags().forEach(function (tag) {
+        getAllTags().forEach(
+            function (tag) {
 
-            const button =
-                document.createElement("button");
-
-
-            button.type = "button";
-
-            button.className =
-                "tag-filter";
-
-            button.textContent =
-                "#" + tag;
-
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    setActiveTagButton(
-                        button
+                const button =
+                    document.createElement(
+                        "button"
                     );
 
-                    showHistoryByTag(tag);
 
-                }
-            );
+                button.type = "button";
+
+                button.className =
+                    "tag-filter";
+
+                button.textContent =
+                    "#" + tag;
 
 
-            container.appendChild(button);
+                button.addEventListener(
+                    "click",
+                    function () {
 
-        });
+                        setActiveTagButton(
+                            button
+                        );
+
+
+                        showHistoryByTag(
+                            tag
+                        );
+
+                    }
+                );
+
+
+                container.appendChild(
+                    button
+                );
+
+            }
+        );
 
     }
+
 
 
     function setActiveTagButton(
@@ -403,16 +541,28 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-        buttons.forEach(function (button) {
+        buttons.forEach(
+            function (button) {
 
-            button.classList.remove("active");
+                button.classList.remove(
+                    "active"
+                );
 
-        });
+            }
+        );
 
 
-        activeButton.classList.add("active");
+        activeButton.classList.add(
+            "active"
+        );
+
     }
 
+
+
+    // =========================
+    // 历史记录
+    // =========================
 
     function showHistory() {
 
@@ -423,7 +573,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!historyList) {
+
             return;
+
         }
 
 
@@ -439,23 +591,30 @@ document.addEventListener("DOMContentLoaded", function () {
             historyList.innerHTML =
                 "<p>还没有灵修记录。</p>";
 
+
             return;
+
         }
 
 
-        records.forEach(function (record) {
+        records.forEach(
+            function (record) {
 
-            createHistoryItem(
-                record.date,
-                historyList
-            );
+                createHistoryItem(
+                    record.date,
+                    historyList
+                );
 
-        });
+            }
+        );
 
     }
 
 
-    function showHistoryByTag(selectedTag) {
+
+    function showHistoryByTag(
+        selectedTag
+    ) {
 
         const historyList =
             document.getElementById(
@@ -464,7 +623,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!historyList) {
+
             return;
+
         }
 
 
@@ -476,16 +637,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 function (record) {
 
                     if (!record.data.tags) {
+
                         return false;
+
                     }
 
 
                     const tags =
                         record.data.tags
                             .split(",")
-                            .map(function (tag) {
-                                return tag.trim();
-                            });
+                            .map(
+                                function (tag) {
+
+                                    return tag.trim();
+
+                                }
+                            );
 
 
                     return tags.includes(
@@ -501,20 +668,25 @@ document.addEventListener("DOMContentLoaded", function () {
             historyList.innerHTML =
                 "<p>还没有带有这个标签的灵修记录。</p>";
 
+
             return;
+
         }
 
 
-        records.forEach(function (record) {
+        records.forEach(
+            function (record) {
 
-            createHistoryItem(
-                record.date,
-                historyList
-            );
+                createHistoryItem(
+                    record.date,
+                    historyList
+                );
 
-        });
+            }
+        );
 
     }
+
 
 
     function createHistoryItem(
@@ -532,28 +704,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         try {
+
             data = JSON.parse(saved);
+
         } catch (error) {
+
             data = {};
+
         }
 
 
         const item =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         item.className =
             "history-item";
 
 
         const dateElement =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         dateElement.className =
             "history-date";
 
 
         const dateObject =
-            new Date(date + "T12:00:00");
+            new Date(
+                date +
+                "T12:00:00"
+            );
 
 
         dateElement.textContent =
@@ -569,10 +754,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const bibleElement =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         bibleElement.className =
             "history-bible";
+
 
         bibleElement.textContent =
             data.bibleReference ||
@@ -580,7 +769,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const previewElement =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         previewElement.className =
             "history-preview";
@@ -604,7 +796,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (preview.length > 80) {
 
                 preview =
-                    preview.substring(0, 80) +
+                    preview.substring(
+                        0,
+                        80
+                    ) +
                     "……";
 
             }
@@ -621,14 +816,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        item.appendChild(dateElement);
+        item.appendChild(
+            dateElement
+        );
 
-        item.appendChild(bibleElement);
-
-        item.appendChild(previewElement);
 
         item.appendChild(
-            createTagsElement(data.tags)
+            bibleElement
+        );
+
+
+        item.appendChild(
+            previewElement
+        );
+
+
+        item.appendChild(
+            createTagsElement(
+                data.tags
+            )
         );
 
 
@@ -636,18 +842,29 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function () {
 
-                loadHistoryRecord(date);
+                loadHistoryRecord(
+                    date
+                );
 
             }
         );
 
 
-        container.appendChild(item);
+        container.appendChild(
+            item
+        );
 
     }
 
 
-    function loadHistoryRecord(date) {
+
+    // =========================
+    // 打开历史记录
+    // =========================
+
+    function loadHistoryRecord(
+        date
+    ) {
 
         const saved =
             localStorage.getItem(
@@ -656,7 +873,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!saved) {
+
             return;
+
         }
 
 
@@ -669,23 +888,27 @@ document.addEventListener("DOMContentLoaded", function () {
             viewingDate = date;
 
 
-            fields.forEach(function (field) {
+            fields.forEach(
+                function (field) {
 
-                const element =
-                    document.getElementById(field);
+                    const element =
+                        document.getElementById(
+                            field
+                        );
 
 
-                if (
-                    element &&
-                    data[field] !== undefined
-                ) {
+                    if (
+                        element &&
+                        data[field] !== undefined
+                    ) {
 
-                    element.value =
-                        data[field];
+                        element.value =
+                            data[field];
+
+                    }
 
                 }
-
-            });
+            );
 
 
             const message =
@@ -722,6 +945,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+    // =========================
+    // 返回今天
+    // =========================
+
     function returnToToday() {
 
         loadTodayData();
@@ -749,6 +977,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+    // =========================
+    // 日历
+    // =========================
+
     function renderCalendar() {
 
         const calendar =
@@ -764,7 +997,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!calendar || !title) {
+
             return;
+
         }
 
 
@@ -804,7 +1039,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (startDay === 0) {
+
             startDay = 7;
+
         }
 
 
@@ -815,12 +1052,18 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             const empty =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             empty.className =
                 "calendar-day empty";
 
-            calendar.appendChild(empty);
+
+            calendar.appendChild(
+                empty
+            );
 
         }
 
@@ -832,7 +1075,10 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             const cell =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             cell.className =
                 "calendar-day";
@@ -847,39 +1093,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             const number =
-                document.createElement("span");
+                document.createElement(
+                    "span"
+                );
+
 
             number.className =
                 "calendar-number";
 
-            number.textContent = day;
+
+            number.textContent =
+                day;
 
 
-            cell.appendChild(number);
+            cell.appendChild(
+                number
+            );
 
 
             if (
                 localStorage.getItem(
-                    "devotion-" + dateKey
+                    "devotion-" +
+                    dateKey
                 )
             ) {
 
                 const dot =
-                    document.createElement("span");
+                    document.createElement(
+                        "span"
+                    );
+
 
                 dot.className =
                     "calendar-dot";
 
-                dot.textContent = "●";
 
-                cell.appendChild(dot);
+                dot.textContent =
+                    "●";
+
+
+                cell.appendChild(
+                    dot
+                );
 
             }
 
 
-            if (dateKey === todayKey) {
+            if (
+                dateKey === todayKey
+            ) {
 
-                cell.classList.add("today");
+                cell.classList.add(
+                    "today"
+                );
 
             }
 
@@ -890,7 +1156,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (
                         localStorage.getItem(
-                            "devotion-" + dateKey
+                            "devotion-" +
+                            dateKey
                         )
                     ) {
 
@@ -919,12 +1186,19 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-            calendar.appendChild(cell);
+            calendar.appendChild(
+                cell
+            );
 
         }
 
     }
 
+
+
+    // =========================
+    // 搜索
+    // =========================
 
     function searchDevotions() {
 
@@ -947,7 +1221,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!input || !results) {
+
             return;
+
         }
 
 
@@ -961,18 +1237,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (message) {
+
             message.textContent = "";
+
         }
 
 
         if (!keyword) {
 
             if (message) {
+
                 message.textContent =
                     "请输入想搜索的内容。";
+
             }
 
+
             return;
+
         }
 
 
@@ -1016,7 +1298,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+
             return;
+
         }
 
 
@@ -1028,150 +1312,411 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        records.forEach(function (record) {
+        records.forEach(
+            function (record) {
 
-            const item =
-                document.createElement(
-                    "div"
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "search-result-item";
+
+
+                const dateElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                dateElement.className =
+                    "search-result-date";
+
+
+                const dateObject =
+                    new Date(
+                        record.date +
+                        "T12:00:00"
+                    );
+
+
+                dateElement.textContent =
+                    dateObject.toLocaleDateString(
+                        "zh-CN",
+                        {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            weekday: "long"
+                        }
+                    );
+
+
+                const bibleElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                bibleElement.className =
+                    "search-result-bible";
+
+
+                bibleElement.textContent =
+                    record.data.bibleReference ||
+                    "没有填写经文";
+
+
+                const previewElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                previewElement.className =
+                    "search-result-preview";
+
+
+                const previewSource =
+                    record.data.reflection ||
+                    record.data.prayer ||
+                    record.data.learning ||
+                    "";
+
+
+                if (previewSource) {
+
+                    let preview =
+                        previewSource.replace(
+                            /\s+/g,
+                            " "
+                        );
+
+
+                    if (preview.length > 120) {
+
+                        preview =
+                            preview.substring(
+                                0,
+                                120
+                            ) +
+                            "……";
+
+                    }
+
+
+                    previewElement.textContent =
+                        preview;
+
+                } else {
+
+                    previewElement.textContent =
+                        "这篇灵修还没有文字内容。";
+
+                }
+
+
+                item.appendChild(
+                    dateElement
                 );
 
 
-            item.className =
-                "search-result-item";
-
-
-            const dateElement =
-                document.createElement(
-                    "div"
+                item.appendChild(
+                    bibleElement
                 );
 
 
-            dateElement.className =
-                "search-result-date";
-
-
-            const dateObject =
-                new Date(
-                    record.date +
-                    "T12:00:00"
+                item.appendChild(
+                    previewElement
                 );
 
 
-            dateElement.textContent =
-                dateObject.toLocaleDateString(
-                    "zh-CN",
-                    {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        weekday: "long"
+                item.appendChild(
+                    createTagsElement(
+                        record.data.tags
+                    )
+                );
+
+
+                item.addEventListener(
+                    "click",
+                    function () {
+
+                        loadHistoryRecord(
+                            record.date
+                        );
+
                     }
                 );
 
 
-            const bibleElement =
-                document.createElement(
-                    "div"
+                results.appendChild(
+                    item
                 );
-
-
-            bibleElement.className =
-                "search-result-bible";
-
-
-            bibleElement.textContent =
-                record.data.bibleReference ||
-                "没有填写经文";
-
-
-            const previewElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            previewElement.className =
-                "search-result-preview";
-
-
-            const previewSource =
-                record.data.reflection ||
-                record.data.prayer ||
-                record.data.learning ||
-                "";
-
-
-            if (previewSource) {
-
-                let preview =
-                    previewSource.replace(
-                        /\s+/g,
-                        " "
-                    );
-
-
-                if (preview.length > 120) {
-
-                    preview =
-                        preview.substring(
-                            0,
-                            120
-                        ) + "……";
-
-                }
-
-
-                previewElement.textContent =
-                    preview;
-
-            } else {
-
-                previewElement.textContent =
-                    "这篇灵修还没有文字内容。";
 
             }
-
-
-            item.appendChild(
-                dateElement
-            );
-
-            item.appendChild(
-                bibleElement
-            );
-
-            item.appendChild(
-                previewElement
-            );
-
-            item.appendChild(
-                createTagsElement(
-                    record.data.tags
-                )
-            );
-
-
-            item.addEventListener(
-                "click",
-                function () {
-
-                    loadHistoryRecord(
-                        record.date
-                    );
-
-                }
-            );
-
-
-            results.appendChild(item);
-
-        });
+        );
 
     }
 
 
+
     // =========================
-    // 灵修统计
+    // 获取连续天数
+    // =========================
+
+    function calculateCurrentStreak(
+        recordDates
+    ) {
+
+        let streak = 0;
+
+
+        let checkDate =
+            new Date();
+
+
+        while (true) {
+
+            const key =
+                formatDateKey(
+                    checkDate
+                );
+
+
+            if (
+                recordDates.has(key)
+            ) {
+
+                streak++;
+
+
+                checkDate.setDate(
+                    checkDate.getDate() - 1
+                );
+
+            } else {
+
+                break;
+
+            }
+
+        }
+
+
+        return streak;
+
+    }
+
+
+
+    // =========================
+    // 获取最长连续
+    // =========================
+
+    function calculateLongestStreak(
+        recordDates
+    ) {
+
+        if (
+            recordDates.size === 0
+        ) {
+
+            return 0;
+
+        }
+
+
+        const dates =
+            Array.from(
+                recordDates
+            ).sort();
+
+
+        let longest = 1;
+
+        let current = 1;
+
+
+        for (
+            let i = 1;
+            i < dates.length;
+            i++
+        ) {
+
+            const previous =
+                new Date(
+                    dates[i - 1] +
+                    "T12:00:00"
+                );
+
+
+            const currentDate =
+                new Date(
+                    dates[i] +
+                    "T12:00:00"
+                );
+
+
+            const difference =
+                (
+                    currentDate -
+                    previous
+                ) /
+                (
+                    1000 *
+                    60 *
+                    60 *
+                    24
+                );
+
+
+            if (
+                difference === 1
+            ) {
+
+                current++;
+
+
+                if (
+                    current >
+                    longest
+                ) {
+
+                    longest =
+                        current;
+
+                }
+
+            } else {
+
+                current = 1;
+
+            }
+
+        }
+
+
+        return longest;
+
+    }
+
+
+
+    // =========================
+    // 日期格式
+    // =========================
+
+    function formatDateKey(
+        date
+    ) {
+
+        const y =
+            date.getFullYear();
+
+
+        const m =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
+
+
+        const d =
+            String(
+                date.getDate()
+            ).padStart(2, "0");
+
+
+        return `${y}-${m}-${d}`;
+
+    }
+
+
+
+    // =========================
+    // 获取最常读书卷
+    // =========================
+
+    function getBookName(
+        reference
+    ) {
+
+        if (!reference) {
+
+            return null;
+
+        }
+
+
+        let text =
+            reference.trim();
+
+
+        text =
+            text.replace(
+                /^[0-9]+\s*/,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /^[一二三四五六七八九十]+\s*/,
+                ""
+            );
+
+
+        const separators = [
+            " ",
+            "　",
+            ":",
+            "：",
+            ",",
+            "，",
+            "-",
+            "–",
+            "—"
+        ];
+
+
+        let result = text;
+
+
+        for (
+            let i = 0;
+            i < separators.length;
+            i++
+        ) {
+
+            const index =
+                result.indexOf(
+                    separators[i]
+                );
+
+
+            if (index > 0) {
+
+                result =
+                    result.substring(
+                        0,
+                        index
+                    );
+
+            }
+
+        }
+
+
+        return result.trim();
+
+    }
+
+
+
+    // =========================
+    // 我的灵修统计
     // =========================
 
     function renderStats() {
@@ -1183,6 +1728,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const totalDays =
             records.length;
 
+
+        const recordDates =
+            new Set(
+                records.map(
+                    function (record) {
+
+                        return record.date;
+
+                    }
+                )
+            );
+
+
+        // 本月
 
         const monthPrefix =
             `${today.getFullYear()}-${String(
@@ -1202,94 +1761,71 @@ document.addEventListener("DOMContentLoaded", function () {
             ).length;
 
 
-        let streak = 0;
+        // 当前连续
 
-
-        const recordDates =
-            new Set(
-                records.map(
-                    function (record) {
-                        return record.date;
-                    }
-                )
+        const streak =
+            calculateCurrentStreak(
+                recordDates
             );
 
 
-        let checkDate =
-            new Date();
+        // 最长连续
+
+        const longest =
+            calculateLongestStreak(
+                recordDates
+            );
 
 
-        while (true) {
-
-            const y =
-                checkDate.getFullYear();
-
-            const m =
-                String(
-                    checkDate.getMonth() + 1
-                ).padStart(2, "0");
-
-            const d =
-                String(
-                    checkDate.getDate()
-                ).padStart(2, "0");
-
-
-            const key =
-                `${y}-${m}-${d}`;
-
-
-            if (
-                recordDates.has(key)
-            ) {
-
-                streak++;
-
-                checkDate.setDate(
-                    checkDate.getDate() - 1
-                );
-
-            } else {
-
-                break;
-
-            }
-
-        }
-
+        // 标签统计
 
         const tagCount = {};
 
 
-        records.forEach(function (record) {
+        records.forEach(
+            function (record) {
 
-            if (!record.data.tags) {
-                return;
+                if (!record.data.tags) {
+
+                    return;
+
+                }
+
+
+                record.data.tags
+                    .split(",")
+                    .map(
+                        function (tag) {
+
+                            return tag.trim();
+
+                        }
+                    )
+                    .filter(Boolean)
+                    .forEach(
+                        function (tag) {
+
+                            if (
+                                !tagCount[tag]
+                            ) {
+
+                                tagCount[tag] = 0;
+
+                            }
+
+
+                            tagCount[tag]++;
+
+                        }
+                    );
+
             }
-
-
-            record.data.tags
-                .split(",")
-                .map(function (tag) {
-                    return tag.trim();
-                })
-                .filter(Boolean)
-                .forEach(function (tag) {
-
-                    if (!tagCount[tag]) {
-                        tagCount[tag] = 0;
-                    }
-
-                    tagCount[tag]++;
-
-                });
-
-        });
+        );
 
 
         let topTag = "—";
 
-        let topCount = 0;
+        let topTagCount = 0;
 
 
         Object.keys(tagCount).forEach(
@@ -1297,19 +1833,81 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     tagCount[tag] >
-                    topCount
+                    topTagCount
                 ) {
 
-                    topCount =
+                    topTagCount =
                         tagCount[tag];
 
-                    topTag = tag;
+                    topTag =
+                        tag;
 
                 }
 
             }
         );
 
+
+        // 书卷统计
+
+        const bookCount = {};
+
+
+        records.forEach(
+            function (record) {
+
+                const book =
+                    getBookName(
+                        record.data.bibleReference
+                    );
+
+
+                if (!book) {
+
+                    return;
+
+                }
+
+
+                if (!bookCount[book]) {
+
+                    bookCount[book] = 0;
+
+                }
+
+
+                bookCount[book]++;
+
+            }
+        );
+
+
+        let topBook = "—";
+
+        let topBookCount = 0;
+
+
+        Object.keys(bookCount).forEach(
+            function (book) {
+
+                if (
+                    bookCount[book] >
+                    topBookCount
+                ) {
+
+                    topBookCount =
+                        bookCount[book];
+
+                    topBook =
+                        book;
+
+                }
+
+            }
+        );
+
+
+        // 更新页面
 
         const totalElement =
             document.getElementById(
@@ -1329,27 +1927,53 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
+        const longestElement =
+            document.getElementById(
+                "longestStreak"
+            );
+
+
         const topTagElement =
             document.getElementById(
                 "topTag"
             );
 
 
+        const topBookElement =
+            document.getElementById(
+                "topBook"
+            );
+
+
         if (totalElement) {
+
             totalElement.textContent =
                 totalDays;
+
         }
 
 
         if (monthElement) {
+
             monthElement.textContent =
                 monthDays;
+
         }
 
 
         if (streakElement) {
+
             streakElement.textContent =
                 streak;
+
+        }
+
+
+        if (longestElement) {
+
+            longestElement.textContent =
+                longest;
+
         }
 
 
@@ -1363,6 +1987,71 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        if (topBookElement) {
+
+            topBookElement.textContent =
+                topBook;
+
+        }
+
+
+        // 本月完成率
+
+        const daysInMonth =
+            new Date(
+                today.getFullYear(),
+                today.getMonth() + 1,
+                0
+            ).getDate();
+
+
+        const currentDay =
+            today.getDate();
+
+
+        const progress =
+            Math.min(
+                100,
+                Math.round(
+                    (
+                        monthDays /
+                        currentDay
+                    ) *
+                    100
+                )
+            );
+
+
+        const progressBar =
+            document.getElementById(
+                "monthProgress"
+            );
+
+
+        if (progressBar) {
+
+            progressBar.style.width =
+                progress + "%";
+
+        }
+
+
+        const progressText =
+            document.getElementById(
+                "monthProgressText"
+            );
+
+
+        if (progressText) {
+
+            progressText.textContent =
+                `${monthDays} / ${currentDay} 天`;
+
+        }
+
+
+        // 说明文字
+
         const statsMessage =
             document.getElementById(
                 "statsMessage"
@@ -1371,15 +2060,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (statsMessage) {
 
-            if (totalDays === 0) {
+            if (
+                totalDays === 0
+            ) {
 
                 statsMessage.textContent =
                     "今天开始记录，让每一天都成为与你主同行的足迹。";
 
-            } else if (streak >= 7) {
+            } else if (
+                streak >= 7
+            ) {
 
                 statsMessage.textContent =
                     `已经连续灵修 ${streak} 天，继续在主里面忠心前行。`;
+
+            } else if (
+                longest >= 7
+            ) {
+
+                statsMessage.textContent =
+                    `你曾经连续灵修 ${longest} 天，愿这份坚持继续成为与你主同行的力量。`;
 
             } else {
 
@@ -1390,7 +2090,228 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        renderTrend();
+
     }
+
+
+
+    // =========================
+    // 最近灵修趋势
+    // =========================
+
+    function renderTrend() {
+
+        const container =
+            document.getElementById(
+                "trendList"
+            );
+
+
+        if (!container) {
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        const records =
+            getRecords();
+
+
+        const countByMonth = {};
+
+
+        records.forEach(
+            function (record) {
+
+                const month =
+                    record.date.substring(
+                        0,
+                        7
+                    );
+
+
+                if (
+                    !countByMonth[month]
+                ) {
+
+                    countByMonth[month] = 0;
+
+                }
+
+
+                countByMonth[month]++;
+
+            }
+        );
+
+
+        const months = [];
+
+
+        const current =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+
+        for (
+            let i = 5;
+            i >= 0;
+            i--
+        ) {
+
+            const date =
+                new Date(
+                    current.getFullYear(),
+                    current.getMonth() - i,
+                    1
+                );
+
+
+            const key =
+                `${date.getFullYear()}-${String(
+                    date.getMonth() + 1
+                ).padStart(2, "0")}`;
+
+
+            months.push({
+                key: key,
+                label:
+                    `${date.getMonth() + 1}月`,
+                count:
+                    countByMonth[key] || 0
+            });
+
+        }
+
+
+        const maxCount =
+            Math.max(
+                1,
+                ...months.map(
+                    function (month) {
+                        return month.count;
+                    }
+                )
+            );
+
+
+        months.forEach(
+            function (month) {
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "trend-row";
+
+
+                const label =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                label.className =
+                    "trend-label";
+
+
+                label.textContent =
+                    month.label;
+
+
+                const barArea =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                barArea.className =
+                    "trend-bar-area";
+
+
+                const bar =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                bar.className =
+                    "trend-bar";
+
+
+                const width =
+                    month.count === 0
+                        ? 0
+                        : Math.max(
+                            8,
+                            (
+                                month.count /
+                                maxCount
+                            ) *
+                            100
+                        );
+
+
+                bar.style.width =
+                    width + "%";
+
+
+                barArea.appendChild(
+                    bar
+                );
+
+
+                const count =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                count.className =
+                    "trend-count";
+
+
+                count.textContent =
+                    month.count +
+                    " 天";
+
+
+                row.appendChild(
+                    label
+                );
+
+
+                row.appendChild(
+                    barArea
+                );
+
+
+                row.appendChild(
+                    count
+                );
+
+
+                container.appendChild(
+                    row
+                );
+
+            }
+        );
+
+    }
+
 
 
     // =========================
@@ -1412,6 +2333,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 calendarDate.setMonth(
                     calendarDate.getMonth() - 1
                 );
+
 
                 renderCalendar();
 
@@ -1437,6 +2359,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     calendarDate.getMonth() + 1
                 );
 
+
                 renderCalendar();
 
             }
@@ -1444,6 +2367,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+
+
+    // =========================
+    // 按钮
+    // =========================
 
     const saveButton =
         document.getElementById(
@@ -1521,8 +2449,12 @@ document.addEventListener("DOMContentLoaded", function () {
             "keydown",
             function (event) {
 
-                if (event.key === "Enter") {
+                if (
+                    event.key === "Enter"
+                ) {
+
                     searchDevotions();
+
                 }
 
             }
@@ -1531,7 +2463,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+    // =========================
     // 初始化
+    // =========================
 
     loadTodayData();
 
