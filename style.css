@@ -175,9 +175,51 @@ button:hover {
 
 
 
-/* =========================
-   灵修历史
-   ========================= */
+/* 标签提示 */
+
+.tag-tip {
+    margin: 5px 0 0;
+
+    font-size: 13px;
+
+    color: #999087;
+}
+
+
+
+/* 标签 */
+
+.history-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 12px;
+}
+
+
+.tag {
+    display: inline-block;
+
+    padding:
+        5px 10px;
+
+    border-radius: 20px;
+
+    background: #f1eee8;
+
+    color: #71695f;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+
+/* 灵修历史 */
 
 .history-section {
     margin-top: 40px;
@@ -246,9 +288,7 @@ button:hover {
 
 
 
-/* =========================
-   灵修日历
-   ========================= */
+/* 灵修日历 */
 
 .calendar-header {
     display: flex;
@@ -387,9 +427,7 @@ button:hover {
 
 
 
-/* =========================
-   搜索
-   ========================= */
+/* 搜索 */
 
 .search-box {
     display: flex;
@@ -495,9 +533,7 @@ button:hover {
 
 
 
-/* =========================
-   手机
-   ========================= */
+/* 手机 */
 
 @media (max-width: 600px) {
 
