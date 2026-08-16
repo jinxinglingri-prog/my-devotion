@@ -16,9 +16,13 @@
 
 </head>
 
+
 <body>
 
     <main class="container">
+
+
+        <!-- 页面标题 -->
 
         <header>
 
@@ -35,6 +39,9 @@
 
         </header>
 
+
+
+        <!-- 今日经文 -->
 
         <section class="card">
 
@@ -54,6 +61,9 @@
         </section>
 
 
+
+        <!-- 今日领受 -->
+
         <section class="card">
 
             <h2>今天神让我看见什么？</h2>
@@ -65,6 +75,9 @@
 
         </section>
 
+
+
+        <!-- 今日回应 -->
 
         <section class="card">
 
@@ -78,6 +91,9 @@
         </section>
 
 
+
+        <!-- 今日祷告 -->
+
         <section class="card">
 
             <h2>今日祷告</h2>
@@ -89,6 +105,9 @@
 
         </section>
 
+
+
+        <!-- 今日学习 -->
 
         <section class="card">
 
@@ -102,10 +121,15 @@
         </section>
 
 
+
+        <!-- 保存 -->
+
         <button id="saveButton">
             保存今天的灵修
         </button>
 
+
+        <!-- 历史 -->
 
         <button id="historyButton">
             查看灵修历史
@@ -114,6 +138,66 @@
 
         <p id="message"></p>
 
+
+
+        <!-- 灵修日历 -->
+
+        <section
+            id="calendarSection"
+            class="history-section"
+        >
+
+            <h2>📅 灵修日历</h2>
+
+            <div class="calendar-header">
+
+                <button
+                    id="prevMonth"
+                    class="calendar-nav"
+                >
+                    ‹
+                </button>
+
+                <div id="calendarTitle"></div>
+
+                <button
+                    id="nextMonth"
+                    class="calendar-nav"
+                >
+                    ›
+                </button>
+
+            </div>
+
+
+            <div class="calendar-weekdays">
+
+                <div>一</div>
+                <div>二</div>
+                <div>三</div>
+                <div>四</div>
+                <div>五</div>
+                <div>六</div>
+                <div>日</div>
+
+            </div>
+
+
+            <div
+                id="calendar"
+                class="calendar"
+            ></div>
+
+
+            <p class="calendar-tip">
+                ● 有灵修记录　　点击日期查看
+            </p>
+
+        </section>
+
+
+
+        <!-- 灵修历史 -->
 
         <section
             id="historySection"
@@ -128,6 +212,7 @@
 
 
     </main>
+
 
 
     <script src="script.js"></script>
