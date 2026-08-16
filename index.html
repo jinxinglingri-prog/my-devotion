@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -11,13 +12,20 @@
 
     <title>今日灵修</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
 
 <body>
 
     <main class="container">
+
+
+        <!-- 页面标题 -->
 
         <header>
 
@@ -33,6 +41,7 @@
             </p>
 
         </header>
+
 
 
         <!-- 今日经文 -->
@@ -55,6 +64,7 @@
         </section>
 
 
+
         <!-- 今日领受 -->
 
         <section class="card">
@@ -69,6 +79,7 @@
             ></textarea>
 
         </section>
+
 
 
         <!-- 今日回应 -->
@@ -87,6 +98,7 @@
         </section>
 
 
+
         <!-- 今日祷告 -->
 
         <section class="card">
@@ -103,6 +115,7 @@
         </section>
 
 
+
         <!-- 今日学习 -->
 
         <section class="card">
@@ -117,6 +130,7 @@
             ></textarea>
 
         </section>
+
 
 
         <!-- 标签 -->
@@ -140,7 +154,8 @@
         </section>
 
 
-        <!-- 保存 -->
+
+        <!-- 保存按钮 -->
 
         <button
             id="saveButton"
@@ -150,7 +165,8 @@
         </button>
 
 
-        <!-- 历史 -->
+
+        <!-- 历史按钮 -->
 
         <button
             id="historyButton"
@@ -158,6 +174,7 @@
         >
             查看灵修历史
         </button>
+
 
 
         <!-- 返回今天 -->
@@ -170,7 +187,11 @@
         </button>
 
 
+
+        <!-- 提示 -->
+
         <p id="message"></p>
+
 
 
         <!-- 我的灵修 -->
@@ -186,6 +207,9 @@
 
 
             <div class="stats-grid">
+
+
+                <!-- 累计 -->
 
                 <div class="stat-card">
 
@@ -203,6 +227,9 @@
                 </div>
 
 
+
+                <!-- 本月 -->
+
                 <div class="stat-card">
 
                     <div
@@ -219,6 +246,9 @@
                 </div>
 
 
+
+                <!-- 当前连续 -->
+
                 <div class="stat-card">
 
                     <div
@@ -229,16 +259,38 @@
                     </div>
 
                     <div class="stat-label">
-                        连续灵修
+                        当前连续
                     </div>
 
                 </div>
 
 
+
+                <!-- 最长连续 -->
+
                 <div class="stat-card">
 
                     <div
                         class="stat-number"
+                        id="longestStreak"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        最长连续
+                    </div>
+
+                </div>
+
+
+
+                <!-- 最常主题 -->
+
+                <div class="stat-card">
+
+                    <div
+                        class="stat-number small-stat"
                         id="topTag"
                     >
                         —
@@ -250,8 +302,60 @@
 
                 </div>
 
+
+
+                <!-- 最常书卷 -->
+
+                <div class="stat-card">
+
+                    <div
+                        class="stat-number small-stat"
+                        id="topBook"
+                    >
+                        —
+                    </div>
+
+                    <div class="stat-label">
+                        最常读书卷
+                    </div>
+
+                </div>
+
             </div>
 
+
+
+            <!-- 本月完成率 -->
+
+            <div class="progress-card">
+
+                <div class="progress-title">
+
+                    <span>
+                        📅 本月灵修完成率
+                    </span>
+
+                    <strong id="monthProgressText">
+                        0 / 31 天
+                    </strong>
+
+                </div>
+
+
+                <div class="progress-bar">
+
+                    <div
+                        id="monthProgress"
+                        class="progress-fill"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- 统计说明 -->
 
             <div class="stats-summary">
 
@@ -261,7 +365,25 @@
 
             </div>
 
+
+
+            <!-- 灵修趋势 -->
+
+            <div class="trend-card">
+
+                <h3>
+                    📈 最近灵修
+                </h3>
+
+                <div
+                    id="trendList"
+                    class="trend-list"
+                ></div>
+
+            </div>
+
         </section>
+
 
 
         <!-- 日历 -->
@@ -327,6 +449,7 @@
         </section>
 
 
+
         <!-- 搜索 -->
 
         <section
@@ -371,7 +494,8 @@
         </section>
 
 
-        <!-- 标签筛选 -->
+
+        <!-- 标签 -->
 
         <section
             class="history-section"
@@ -391,7 +515,8 @@
         </section>
 
 
-        <!-- 历史 -->
+
+        <!-- 历史记录 -->
 
         <section
             class="history-section"
@@ -407,7 +532,9 @@
 
         </section>
 
+
     </main>
+
 
 
     <script src="script.js"></script>
