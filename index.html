@@ -22,7 +22,9 @@
     <main class="container">
 
 
-        <!-- 登录区域 -->
+        <!-- =========================
+             登录区域
+        ========================== -->
 
         <section class="auth-card">
 
@@ -34,20 +36,17 @@
                     type="email"
                     id="email"
                     placeholder="邮箱"
-                    autocomplete="email"
                 >
 
                 <input
                     type="password"
                     id="password"
                     placeholder="密码"
-                    autocomplete="current-password"
                 >
 
                 <div class="auth-buttons">
 
                     <button
-                        type="button"
                         id="signUpButton"
                         class="secondary-button"
                     >
@@ -55,7 +54,6 @@
                     </button>
 
                     <button
-                        type="button"
                         id="signInButton"
                     >
                         登录
@@ -74,7 +72,6 @@
                 <p id="userEmail"></p>
 
                 <button
-                    type="button"
                     id="signOutButton"
                     class="secondary-button"
                 >
@@ -90,7 +87,9 @@
 
 
 
-        <!-- 页面标题 -->
+        <!-- =========================
+             页面标题
+        ========================== -->
 
         <header>
 
@@ -109,7 +108,9 @@
 
 
 
-        <!-- 今日经文 -->
+        <!-- =========================
+             今日经文
+        ========================== -->
 
         <section class="card">
 
@@ -130,7 +131,9 @@
 
 
 
-        <!-- 今日领受 -->
+        <!-- =========================
+             今日领受
+        ========================== -->
 
         <section class="card">
 
@@ -147,7 +150,9 @@
 
 
 
-        <!-- 今日回应 -->
+        <!-- =========================
+             今日回应
+        ========================== -->
 
         <section class="card">
 
@@ -164,7 +169,9 @@
 
 
 
-        <!-- 今日祷告 -->
+        <!-- =========================
+             今日祷告
+        ========================== -->
 
         <section class="card">
 
@@ -179,7 +186,9 @@
 
 
 
-        <!-- 今日学习 -->
+        <!-- =========================
+             今日学习
+        ========================== -->
 
         <section class="card">
 
@@ -194,16 +203,150 @@
 
 
 
-        <!-- 日历 -->
+        <!-- =========================
+             标签
+        ========================== -->
+
+        <section class="card tags-card">
+
+            <h2>🏷️ 今天的标签</h2>
+
+            <p class="tag-description">
+                用几个词记录今天灵修的主题，以后可以快速找到相关灵修。
+            </p>
+
+
+            <!-- 已选择标签 -->
+
+            <div
+                id="selectedTags"
+                class="selected-tags"
+            ></div>
+
+
+            <!-- 添加标签 -->
+
+            <div class="tag-input-row">
+
+                <input
+                    type="text"
+                    id="tagInput"
+                    placeholder="例如：信靠"
+                    maxlength="20"
+                >
+
+                <button
+                    type="button"
+                    id="addTagButton"
+                    class="add-tag-button"
+                >
+                    添加
+                </button>
+
+            </div>
+
+
+            <!-- 常用标签 -->
+
+            <p class="tag-label">
+                常用标签
+            </p>
+
+            <div
+                id="suggestedTags"
+                class="suggested-tags"
+            >
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="信靠"
+                >
+                    信靠
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="祷告"
+                >
+                    祷告
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="拖延"
+                >
+                    拖延
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="自律"
+                >
+                    自律
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="顺服"
+                >
+                    顺服
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="恩典"
+                >
+                    恩典
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="焦虑"
+                >
+                    焦虑
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="传福音"
+                >
+                    传福音
+                </button>
+
+                <button
+                    type="button"
+                    class="suggested-tag"
+                    data-tag="学习"
+                >
+                    学习
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             日历
+        ========================== -->
 
         <section class="calendar-card">
 
             <div class="calendar-header">
 
                 <button
-                    type="button"
                     id="prevMonth"
                     class="calendar-nav"
+                    type="button"
                 >
                     ‹
                 </button>
@@ -213,9 +356,9 @@
                 </h2>
 
                 <button
-                    type="button"
                     id="nextMonth"
                     class="calendar-nav"
+                    type="button"
                 >
                     ›
                 </button>
@@ -250,13 +393,14 @@
 
 
 
-        <!-- 保存 -->
+        <!-- =========================
+             保存
+        ========================== -->
 
         <button
-            type="button"
             id="saveButton"
             class="save-button"
-            disabled
+            type="button"
         >
             保存今天的灵修
         </button>
@@ -266,7 +410,56 @@
 
 
 
-        <!-- 历史 -->
+        <!-- =========================
+             搜索
+        ========================== -->
+
+        <section class="search-card">
+
+            <h2>🔍 搜索我的灵修</h2>
+
+            <p class="search-description">
+                搜索标签、经文、领受、回应、祷告和学习内容。
+            </p>
+
+
+            <div class="search-input-row">
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="例如：信靠、拖延、祷告……"
+                >
+
+                <button
+                    type="button"
+                    id="clearSearchButton"
+                    class="clear-search-button"
+                >
+                    清除
+                </button>
+
+            </div>
+
+
+            <p
+                id="searchStatus"
+                class="search-status"
+            ></p>
+
+
+            <div
+                id="searchTags"
+                class="search-tags"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =========================
+             灵修历史
+        ========================== -->
 
         <section class="history-section">
 
