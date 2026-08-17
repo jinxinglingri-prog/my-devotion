@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================
        Supabase
-    ========================= */
+    ========================== */
 
     const SUPABASE_URL =
         "https://asfqtznfhljxwfktuido.supabase.co";
@@ -10,15 +10,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const SUPABASE_KEY =
         "sb_publishable_Vu7U10XTkqZaOPa-cj9BXQ_TKxgkEwy";
 
+
     if (!window.supabase) {
-        console.error("Supabase JS 没有加载。");
+
+        console.error(
+            "Supabase JS 没有加载。"
+        );
 
         const authMessage =
-            document.getElementById("authMessage");
+            document.getElementById(
+                "authMessage"
+            );
 
         if (authMessage) {
+
             authMessage.textContent =
                 "系统加载失败，请刷新页面。";
+
         }
 
         return;
@@ -34,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================
        灵修字段
-    ========================= */
+    ========================== */
 
     const fields = [
         "bibleReference",
@@ -47,8 +55,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================
+       标签
+    ========================== */
+
+    let selectedTags = [];
+
+    let allHistoryRecords = [];
+
+
+    /* =========================
        日期
-    ========================= */
+    ========================== */
 
     const today =
         new Date();
@@ -65,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================
        日期格式
-    ========================= */
+    ========================== */
 
     function formatDate(date) {
 
@@ -129,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================
        页面日期
-    ========================= */
+    ========================== */
 
     function updateTodayText() {
 
@@ -144,6 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 formatChineseDate(
                     selectedDate
                 );
+
         }
     }
 
@@ -153,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================
        登录 UI
-    ========================= */
+    ========================== */
 
     function updateAuthUI(user) {
 
@@ -181,58 +199,80 @@ document.addEventListener("DOMContentLoaded", function () {
         if (user) {
 
             if (loggedOut) {
+
                 loggedOut.style.display =
                     "none";
+
             }
 
+
             if (loggedIn) {
+
                 loggedIn.style.display =
                     "block";
+
             }
+
 
             if (userEmail) {
 
                 userEmail.textContent =
                     "已登录：" +
                     (user.email || "");
+
             }
 
+
             if (saveButton) {
+
                 saveButton.disabled =
                     false;
+
             }
 
         } else {
 
             if (loggedOut) {
+
                 loggedOut.style.display =
                     "block";
+
             }
+
 
             if (loggedIn) {
+
                 loggedIn.style.display =
                     "none";
+
             }
+
 
             if (userEmail) {
-                userEmail.textContent = "";
+
+                userEmail.textContent =
+                    "";
+
             }
 
+
             if (saveButton) {
+
                 saveButton.disabled =
                     true;
+
             }
+
         }
+
     }
 
 
     /* =========================
        消息
-    ========================= */
+    ========================== */
 
-    function showAuthMessage(
-        text
-    ) {
+    function showAuthMessage(text) {
 
         const element =
             document.getElementById(
@@ -240,15 +280,15 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         if (element) {
+
             element.textContent =
                 text;
+
         }
     }
 
 
-    function showMessage(
-        text
-    ) {
+    function showMessage(text) {
 
         const element =
             document.getElementById(
@@ -256,15 +296,214 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         if (element) {
+
             element.textContent =
                 text;
+
         }
     }
 
 
     /* =========================
+       标签工具
+    ========================== */
+
+    function normalizeTags(tags) {
+
+        if (!tags) {
+
+            return [];
+
+        }
+
+
+        if (Array.isArray(tags)) {
+
+            return tags
+                .map(function (tag) {
+
+                    return String(tag)
+                        .trim();
+
+                })
+                .filter(Boolean);
+
+        }
+
+
+        return String(tags)
+            .split(",")
+            .map(function (tag) {
+
+                return tag.trim();
+
+            })
+            .filter(Boolean);
+
+    }
+
+
+    function renderSelectedTags() {
+
+        const container =
+            document.getElementById(
+                "selectedTags"
+            );
+
+        if (!container) {
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            "";
+
+
+        selectedTags.forEach(
+            function (tag) {
+
+                const tagElement =
+                    document.createElement(
+                        "span"
+                    );
+
+                tagElement.className =
+                    "tag";
+
+
+                const text =
+                    document.createElement(
+                        "span"
+                    );
+
+                text.textContent =
+                    tag;
+
+
+                const removeButton =
+                    document.createElement(
+                        "button"
+                    );
+
+                removeButton.type =
+                    "button";
+
+                removeButton.className =
+                    "tag-remove";
+
+                removeButton.textContent =
+                    "×";
+
+
+                removeButton.addEventListener(
+                    "click",
+                    function () {
+
+                        selectedTags =
+                            selectedTags.filter(
+                                function (item) {
+
+                                    return (
+                                        item !==
+                                        tag
+                                    );
+
+                                }
+                            );
+
+                        renderSelectedTags();
+
+                    }
+                );
+
+
+                tagElement.appendChild(
+                    text
+                );
+
+                tagElement.appendChild(
+                    removeButton
+                );
+
+                container.appendChild(
+                    tagElement
+                );
+
+            }
+        );
+
+    }
+
+
+    function addTag(tag) {
+
+        tag =
+            String(tag || "")
+                .trim();
+
+
+        if (!tag) {
+
+            return;
+
+        }
+
+
+        if (
+            selectedTags.includes(tag)
+        ) {
+
+            return;
+
+        }
+
+
+        selectedTags.push(tag);
+
+        renderSelectedTags();
+
+
+        const tagInput =
+            document.getElementById(
+                "tagInput"
+            );
+
+        if (tagInput) {
+
+            tagInput.value =
+                "";
+
+            tagInput.focus();
+
+        }
+
+    }
+
+
+    function loadTags(tags) {
+
+        selectedTags =
+            normalizeTags(tags);
+
+        renderSelectedTags();
+
+    }
+
+
+    function clearTags() {
+
+        selectedTags = [];
+
+        renderSelectedTags();
+
+    }
+
+
+    /* =========================
        清空输入框
-    ========================= */
+    ========================== */
 
     function clearFields() {
 
@@ -277,16 +516,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
                 if (element) {
-                    element.value = "";
+
+                    element.value =
+                        "";
+
                 }
+
             }
         );
+
+
+        clearTags();
     }
 
 
     /* =========================
        填入灵修
-    ========================= */
+    ========================== */
 
     function fillFields(data) {
 
@@ -309,6 +555,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             learning:
                 "learning"
+
         };
 
 
@@ -323,6 +570,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const databaseField =
                     mapping[field];
 
+
                 if (
                     element &&
                     data &&
@@ -331,16 +579,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 ) {
 
                     element.value =
-                        data[databaseField] || "";
+                        data[databaseField] ||
+                        "";
+
                 }
+
             }
         );
+
+
+        loadTags(
+            data
+                ? data.tags
+                : []
+        );
+
     }
 
 
     /* =========================
        获取当前用户
-    ========================= */
+    ========================== */
 
     async function getCurrentUser() {
 
@@ -354,6 +613,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .auth
                     .getUser();
 
+
             if (error) {
 
                 console.error(
@@ -362,7 +622,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return null;
+
             }
+
 
             return data.user || null;
 
@@ -374,13 +636,15 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             return null;
+
         }
+
     }
 
 
     /* =========================
        注册
-    ========================= */
+    ========================== */
 
     async function signUp() {
 
@@ -400,6 +664,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ? emailElement.value.trim()
                 : "";
 
+
         const password =
             passwordElement
                 ? passwordElement.value
@@ -413,6 +678,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             return;
+
         }
 
 
@@ -430,8 +696,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 await supabaseClient
                     .auth
                     .signUp({
-                        email: email,
-                        password: password
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
                     });
 
 
@@ -448,6 +719,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
+
             }
 
 
@@ -465,6 +737,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 showAuthMessage(
                     "注册成功！"
                 );
+
             }
 
         } catch (error) {
@@ -478,13 +751,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 "注册失败：" +
                 error.message
             );
+
         }
+
     }
 
 
     /* =========================
        登录
-    ========================= */
+    ========================== */
 
     async function signIn() {
 
@@ -509,6 +784,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ? emailElement.value.trim()
                 : "";
 
+
         const password =
             passwordElement
                 ? passwordElement.value
@@ -522,6 +798,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             return;
+
         }
 
 
@@ -531,7 +808,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (button) {
-            button.disabled = true;
+
+            button.disabled =
+                true;
+
         }
 
 
@@ -545,9 +825,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     .auth
                     .signInWithPassword({
 
-                        email: email,
+                        email:
+                            email,
 
-                        password: password
+                        password:
+                            password
+
                     });
 
 
@@ -564,16 +847,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
+
             }
 
 
-            if (!data || !data.user) {
+            if (
+                !data ||
+                !data.user
+            ) {
 
                 showAuthMessage(
                     "登录没有成功，请重新尝试。"
                 );
 
                 return;
+
             }
 
 
@@ -609,15 +897,20 @@ document.addEventListener("DOMContentLoaded", function () {
         } finally {
 
             if (button) {
-                button.disabled = false;
+
+                button.disabled =
+                    false;
+
             }
+
         }
+
     }
 
 
     /* =========================
        退出
-    ========================= */
+    ========================== */
 
     async function signOut() {
 
@@ -626,8 +919,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 "signOutButton"
             );
 
+
         if (button) {
-            button.disabled = true;
+
+            button.disabled =
+                true;
+
         }
 
 
@@ -654,6 +951,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
+
             }
 
 
@@ -661,11 +959,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
             updateAuthUI(null);
 
+
             showAuthMessage(
                 "已退出登录。"
             );
 
+
             showMessage("");
+
+
+            allHistoryRecords = [];
+
+            renderSearchResults("");
+
 
             await renderCalendar();
 
@@ -687,15 +993,20 @@ document.addEventListener("DOMContentLoaded", function () {
         } finally {
 
             if (button) {
-                button.disabled = false;
+
+                button.disabled =
+                    false;
+
             }
+
         }
+
     }
 
 
     /* =========================
        根据日期读取灵修
-    ========================= */
+    ========================== */
 
     async function getDevotionByDate(
         dateString
@@ -704,8 +1015,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const user =
             await getCurrentUser();
 
+
         if (!user) {
+
             return null;
+
         }
 
 
@@ -737,10 +1051,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return null;
+
             }
 
 
             return data || null;
+
 
         } catch (error) {
 
@@ -750,21 +1066,26 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             return null;
+
         }
+
     }
 
 
     /* =========================
        读取今天
-    ========================= */
+    ========================== */
 
     async function loadTodayFromSupabase() {
 
         const user =
             await getCurrentUser();
 
+
         if (!user) {
+
             return;
+
         }
 
 
@@ -787,13 +1108,15 @@ document.addEventListener("DOMContentLoaded", function () {
             clearFields();
 
             showMessage("");
+
         }
+
     }
 
 
     /* =========================
        保存灵修
-    ========================= */
+    ========================== */
 
     async function saveTodayData() {
 
@@ -808,6 +1131,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             return;
+
         }
 
 
@@ -818,7 +1142,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (saveButton) {
-            saveButton.disabled = true;
+
+            saveButton.disabled =
+                true;
+
         }
 
 
@@ -858,15 +1185,15 @@ document.addEventListener("DOMContentLoaded", function () {
             learning:
                 document.getElementById(
                     "learning"
-                ).value
+                ).value,
+
+            tags:
+                selectedTags.join(",")
+
         };
 
 
         try {
-
-            /*
-             * 先寻找当天已有记录
-             */
 
             const {
                 data: existing,
@@ -899,10 +1226,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
+
             }
 
 
-            let error = null;
+            let error =
+                null;
 
 
             if (existing) {
@@ -928,6 +1257,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 error =
                     result.error;
+
             }
 
 
@@ -944,6 +1274,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
+
             }
 
 
@@ -972,16 +1303,23 @@ document.addEventListener("DOMContentLoaded", function () {
         } finally {
 
             if (saveButton) {
+
+                const currentUser =
+                    await getCurrentUser();
+
                 saveButton.disabled =
-                    !(await getCurrentUser());
+                    !currentUser;
+
             }
+
         }
+
     }
 
 
     /* =========================
        日历
-    ========================= */
+    ========================== */
 
     async function renderCalendar() {
 
@@ -997,7 +1335,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!title || !container) {
+
             return;
+
         }
 
 
@@ -1008,7 +1348,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "月";
 
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
 
 
         const firstDay =
@@ -1017,6 +1358,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 calendarMonth,
                 1
             );
+
 
         const lastDay =
             new Date(
@@ -1028,6 +1370,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const startWeekday =
             firstDay.getDay();
+
 
         const daysInMonth =
             lastDay.getDate();
@@ -1095,8 +1438,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             recordDates.add(
                                 item.date
                             );
+
                         }
                     );
+
                 }
 
             } catch (error) {
@@ -1105,13 +1450,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     "读取日历记录失败：",
                     error
                 );
+
             }
+
         }
 
 
-        /*
-         * 上个月
-         */
+        /* 上个月 */
 
         for (
             let i = startWeekday - 1;
@@ -1126,18 +1471,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     -i
                 );
 
+
             createCalendarDay(
                 date,
                 true,
                 recordDates,
                 container
             );
+
         }
 
 
-        /*
-         * 本月
-         */
+        /* 本月 */
 
         for (
             let day = 1;
@@ -1152,18 +1497,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     day
                 );
 
+
             createCalendarDay(
                 date,
                 false,
                 recordDates,
                 container
             );
+
         }
 
 
-        /*
-         * 下个月
-         */
+        /* 下个月 */
 
         const totalCells =
             startWeekday +
@@ -1192,19 +1537,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     i
                 );
 
+
             createCalendarDay(
                 date,
                 true,
                 recordDates,
                 container
             );
+
         }
+
     }
 
 
     /* =========================
        创建日历日期
-    ========================= */
+    ========================== */
 
     function createCalendarDay(
         date,
@@ -1222,6 +1570,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "div"
             );
 
+
         wrapper.className =
             "calendar-day";
 
@@ -1231,6 +1580,7 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.classList.add(
                 "other-month"
             );
+
         }
 
 
@@ -1242,6 +1592,7 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.classList.add(
                 "today"
             );
+
         }
 
 
@@ -1253,6 +1604,7 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.classList.add(
                 "selected"
             );
+
         }
 
 
@@ -1265,6 +1617,7 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.classList.add(
                 "has-record"
             );
+
         }
 
 
@@ -1273,8 +1626,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 "button"
             );
 
+
         button.type =
             "button";
+
 
         button.textContent =
             date.getDate();
@@ -1287,6 +1642,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 await selectCalendarDate(
                     dateString
                 );
+
             }
         );
 
@@ -1295,15 +1651,17 @@ document.addEventListener("DOMContentLoaded", function () {
             button
         );
 
+
         container.appendChild(
             wrapper
         );
+
     }
 
 
     /* =========================
        选择日期
-    ========================= */
+    ========================== */
 
     async function selectCalendarDate(
         dateString
@@ -1319,6 +1677,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         calendarYear =
             Number(parts[0]);
+
 
         calendarMonth =
             Number(parts[1]) - 1;
@@ -1340,9 +1699,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 "请先登录后查看灵修记录。"
             );
 
+
             await renderCalendar();
 
             return;
+
         }
 
 
@@ -1355,6 +1716,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (data) {
 
             fillFields(data);
+
 
             showMessage(
                 "✓ 已打开 " +
@@ -1372,6 +1734,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ) +
                 " 还没有灵修记录。"
             );
+
         }
 
 
@@ -1379,15 +1742,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         window.scrollTo({
+
             top: 0,
+
             behavior: "smooth"
+
         });
+
     }
 
 
     /* =========================
        历史
-    ========================= */
+    ========================== */
 
     async function loadHistory() {
 
@@ -1398,7 +1765,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!historyList) {
+
             return;
+
         }
 
 
@@ -1408,10 +1777,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!user) {
 
+            allHistoryRecords = [];
+
+
             historyList.innerHTML =
                 "<p>请先登录后查看灵修历史。</p>";
 
+
+            renderSearchResults(
+                ""
+            );
+
             return;
+
         }
 
 
@@ -1435,7 +1813,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     .order(
                         "date",
                         {
-                            ascending: false
+                            ascending:
+                                false
                         }
                     );
 
@@ -1447,144 +1826,33 @@ document.addEventListener("DOMContentLoaded", function () {
                     error
                 );
 
+
                 historyList.innerHTML =
                     "<p>读取灵修历史失败：" +
                     error.message +
                     "</p>";
 
+
                 return;
+
             }
 
 
-            historyList.innerHTML =
-                "";
+            allHistoryRecords =
+                data || [];
 
 
-            if (
-                !data ||
-                data.length === 0
-            ) {
-
-                historyList.innerHTML =
-                    "<p>还没有灵修记录。</p>";
-
-                return;
-            }
-
-
-            data.forEach(
-                function (record) {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.className =
-                        "history-item";
-
-
-                    const dateElement =
-                        document.createElement(
-                            "div"
-                        );
-
-                    dateElement.className =
-                        "history-date";
-
-                    dateElement.textContent =
-                        formatChineseDate(
-                            record.date
-                        );
-
-
-                    const bibleElement =
-                        document.createElement(
-                            "div"
-                        );
-
-                    bibleElement.className =
-                        "history-bible";
-
-                    bibleElement.textContent =
-                        record.bible_reference ||
-                        "还没有填写经文";
-
-
-                    const previewElement =
-                        document.createElement(
-                            "div"
-                        );
-
-                    previewElement.className =
-                        "history-preview";
-
-
-                    if (
-                        record.reflection
-                    ) {
-
-                        let preview =
-                            record.reflection
-                                .replace(
-                                    /\s+/g,
-                                    " "
-                                );
-
-
-                        if (
-                            preview.length >
-                            100
-                        ) {
-
-                            preview =
-                                preview.substring(
-                                    0,
-                                    100
-                                ) +
-                                "……";
-                        }
-
-
-                        previewElement.textContent =
-                            preview;
-
-                    } else {
-
-                        previewElement.textContent =
-                            "还没有记录今天的领受";
-                    }
-
-
-                    item.appendChild(
-                        dateElement
-                    );
-
-                    item.appendChild(
-                        bibleElement
-                    );
-
-                    item.appendChild(
-                        previewElement
-                    );
-
-
-                    item.addEventListener(
-                        "click",
-                        async function () {
-
-                            await selectCalendarDate(
-                                record.date
-                            );
-                        }
-                    );
-
-
-                    historyList.appendChild(
-                        item
-                    );
-                }
+            renderHistory(
+                allHistoryRecords
             );
+
+
+            renderSearchResults(
+                getSearchValue()
+            );
+
+
+            renderSearchTags();
 
 
         } catch (error) {
@@ -1594,15 +1862,871 @@ document.addEventListener("DOMContentLoaded", function () {
                 error
             );
 
+
             historyList.innerHTML =
                 "<p>读取灵修历史失败。</p>";
+
         }
+
     }
 
 
     /* =========================
+       显示历史
+    ========================== */
+
+    function renderHistory(
+        records
+    ) {
+
+        const historyList =
+            document.getElementById(
+                "historyList"
+            );
+
+
+        if (!historyList) {
+
+            return;
+
+        }
+
+
+        historyList.innerHTML =
+            "";
+
+
+        if (
+            !records ||
+            records.length === 0
+        ) {
+
+            historyList.innerHTML =
+                "<p>还没有灵修记录。</p>";
+
+            return;
+
+        }
+
+
+        records.forEach(
+            function (record) {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "history-item";
+
+
+                const dateElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                dateElement.className =
+                    "history-date";
+
+
+                dateElement.textContent =
+                    formatChineseDate(
+                        record.date
+                    );
+
+
+                const bibleElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                bibleElement.className =
+                    "history-bible";
+
+
+                bibleElement.textContent =
+                    record.bible_reference ||
+                    "还没有填写经文";
+
+
+                const previewElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                previewElement.className =
+                    "history-preview";
+
+
+                if (
+                    record.reflection
+                ) {
+
+                    let preview =
+                        record.reflection
+                            .replace(
+                                /\s+/g,
+                                " "
+                            );
+
+
+                    if (
+                        preview.length >
+                        100
+                    ) {
+
+                        preview =
+                            preview.substring(
+                                0,
+                                100
+                            ) +
+                            "……";
+
+                    }
+
+
+                    previewElement.textContent =
+                        preview;
+
+                } else {
+
+                    previewElement.textContent =
+                        "还没有记录今天的领受";
+
+                }
+
+
+                item.appendChild(
+                    dateElement
+                );
+
+
+                item.appendChild(
+                    bibleElement
+                );
+
+
+                item.appendChild(
+                    previewElement
+                );
+
+
+                const tags =
+                    normalizeTags(
+                        record.tags
+                    );
+
+
+                if (
+                    tags.length > 0
+                ) {
+
+                    const tagsContainer =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    tagsContainer.className =
+                        "history-tags";
+
+
+                    tags.forEach(
+                        function (tag) {
+
+                            const tagElement =
+                                document.createElement(
+                                    "button"
+                                );
+
+
+                            tagElement.type =
+                                "button";
+
+
+                            tagElement.className =
+                                "history-tag";
+
+
+                            tagElement.textContent =
+                                tag;
+
+
+                            tagElement.addEventListener(
+                                "click",
+                                function (event) {
+
+                                    event.stopPropagation();
+
+                                    searchByTag(
+                                        tag
+                                    );
+
+                                }
+                            );
+
+
+                            tagsContainer.appendChild(
+                                tagElement
+                            );
+
+                        }
+                    );
+
+
+                    item.appendChild(
+                        tagsContainer
+                    );
+
+                }
+
+
+                item.addEventListener(
+                    "click",
+                    async function () {
+
+                        await selectCalendarDate(
+                            record.date
+                        );
+
+                    }
+                );
+
+
+                historyList.appendChild(
+                    item
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       搜索
+    ========================== */
+
+    function getSearchValue() {
+
+        const input =
+            document.getElementById(
+                "searchInput"
+            );
+
+
+        return input
+            ? input.value.trim()
+            : "";
+
+    }
+
+
+    function recordMatchesSearch(
+        record,
+        keyword
+    ) {
+
+        if (!keyword) {
+
+            return true;
+
+        }
+
+
+        const searchText = [
+
+            record.date,
+
+            record.bible_reference,
+
+            record.bible_text,
+
+            record.reflection,
+
+            record.response,
+
+            record.prayer,
+
+            record.learning,
+
+            normalizeTags(
+                record.tags
+            ).join(" ")
+
+        ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+
+        return searchText.includes(
+            keyword.toLowerCase()
+        );
+
+    }
+
+
+    function renderSearchResults(
+        keyword
+    ) {
+
+        const status =
+            document.getElementById(
+                "searchStatus"
+            );
+
+
+        if (!status) {
+
+            return;
+
+        }
+
+
+        const existingResults =
+            document.getElementById(
+                "searchResults"
+            );
+
+
+        if (existingResults) {
+
+            existingResults.remove();
+
+        }
+
+
+        if (!keyword) {
+
+            status.textContent =
+                allHistoryRecords.length > 0
+                    ? "可以搜索你过去的灵修。"
+                    : "登录并保存灵修后，这里会出现搜索结果。";
+
+            return;
+
+        }
+
+
+        const results =
+            allHistoryRecords.filter(
+                function (record) {
+
+                    return recordMatchesSearch(
+                        record,
+                        keyword
+                    );
+
+                }
+            );
+
+
+        status.textContent =
+            "找到 " +
+            results.length +
+            " 篇相关灵修";
+
+
+        const resultContainer =
+            document.createElement(
+                "div"
+            );
+
+
+        resultContainer.id =
+            "searchResults";
+
+
+        results.forEach(
+            function (record) {
+
+                const result =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                result.className =
+                    "search-result";
+
+
+                const date =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                date.className =
+                    "search-result-date";
+
+
+                date.textContent =
+                    formatChineseDate(
+                        record.date
+                    );
+
+
+                const bible =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                bible.className =
+                    "search-result-bible";
+
+
+                bible.textContent =
+                    record.bible_reference ||
+                    "还没有填写经文";
+
+
+                const preview =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                preview.className =
+                    "search-result-preview";
+
+
+                const text =
+                    record.reflection ||
+                    record.response ||
+                    record.prayer ||
+                    record.learning ||
+                    "这篇灵修没有文字预览。";
+
+
+                preview.textContent =
+                    text.length > 120
+                        ? text.substring(
+                              0,
+                              120
+                          ) + "……"
+                        : text;
+
+
+                result.appendChild(
+                    date
+                );
+
+
+                result.appendChild(
+                    bible
+                );
+
+
+                result.appendChild(
+                    preview
+                );
+
+
+                const tags =
+                    normalizeTags(
+                        record.tags
+                    );
+
+
+                if (
+                    tags.length > 0
+                ) {
+
+                    const tagsContainer =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    tagsContainer.className =
+                        "search-result-tags";
+
+
+                    tags.forEach(
+                        function (tag) {
+
+                            const tagElement =
+                                document.createElement(
+                                    "button"
+                                );
+
+
+                            tagElement.type =
+                                "button";
+
+
+                            tagElement.className =
+                                "search-result-tag";
+
+
+                            tagElement.textContent =
+                                tag;
+
+
+                            tagElement.addEventListener(
+                                "click",
+                                function (event) {
+
+                                    event.stopPropagation();
+
+                                    searchByTag(
+                                        tag
+                                    );
+
+                                }
+                            );
+
+
+                            tagsContainer.appendChild(
+                                tagElement
+                            );
+
+                        }
+                    );
+
+
+                    result.appendChild(
+                        tagsContainer
+                    );
+
+                }
+
+
+                result.addEventListener(
+                    "click",
+                    async function () {
+
+                        await selectCalendarDate(
+                            record.date
+                        );
+
+                    }
+                );
+
+
+                resultContainer.appendChild(
+                    result
+                );
+
+            }
+        );
+
+
+        status.parentNode.insertBefore(
+            resultContainer,
+            status.nextSibling
+        );
+
+    }
+
+
+    function searchByTag(tag) {
+
+        const input =
+            document.getElementById(
+                "searchInput"
+            );
+
+
+        if (input) {
+
+            input.value =
+                tag;
+
+        }
+
+
+        renderSearchResults(
+            tag
+        );
+
+
+        const searchCard =
+            document.querySelector(
+                ".search-card"
+            );
+
+
+        if (searchCard) {
+
+            searchCard.scrollIntoView({
+
+                behavior: "smooth",
+
+                block: "start"
+
+            });
+
+        }
+
+    }
+
+
+    /* =========================
+       常用标签搜索
+    ========================== */
+
+    function renderSearchTags() {
+
+        const container =
+            document.getElementById(
+                "searchTags"
+            );
+
+
+        if (!container) {
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            "";
+
+
+        const tagMap =
+            {};
+
+
+        allHistoryRecords.forEach(
+            function (record) {
+
+                normalizeTags(
+                    record.tags
+                ).forEach(
+                    function (tag) {
+
+                        tagMap[tag] =
+                            (tagMap[tag] || 0) +
+                            1;
+
+                    }
+                );
+
+            }
+        );
+
+
+        const tags =
+            Object.keys(tagMap)
+                .sort(
+                    function (a, b) {
+
+                        return (
+                            tagMap[b] -
+                            tagMap[a]
+                        );
+
+                    }
+                )
+                .slice(0, 12);
+
+
+        tags.forEach(
+            function (tag) {
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                button.type =
+                    "button";
+
+
+                button.className =
+                    "search-tag";
+
+
+                button.textContent =
+                    tag;
+
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        searchByTag(
+                            tag
+                        );
+
+                    }
+                );
+
+
+                container.appendChild(
+                    button
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       搜索事件
+    ========================== */
+
+    const searchInput =
+        document.getElementById(
+            "searchInput"
+        );
+
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            function () {
+
+                renderSearchResults(
+                    searchInput.value.trim()
+                );
+
+            }
+        );
+
+    }
+
+
+    const clearSearchButton =
+        document.getElementById(
+            "clearSearchButton"
+        );
+
+
+    if (clearSearchButton) {
+
+        clearSearchButton.addEventListener(
+            "click",
+            function () {
+
+                if (searchInput) {
+
+                    searchInput.value =
+                        "";
+
+                }
+
+
+                renderSearchResults(
+                    ""
+                );
+
+                renderSearchTags();
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       添加标签
+    ========================== */
+
+    const addTagButton =
+        document.getElementById(
+            "addTagButton"
+        );
+
+
+    if (addTagButton) {
+
+        addTagButton.addEventListener(
+            "click",
+            function () {
+
+                const input =
+                    document.getElementById(
+                        "tagInput"
+                    );
+
+
+                if (input) {
+
+                    addTag(
+                        input.value
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    const tagInput =
+        document.getElementById(
+            "tagInput"
+        );
+
+
+    if (tagInput) {
+
+        tagInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    addTag(
+                        tagInput.value
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       常用标签
+    ========================== */
+
+    document
+        .querySelectorAll(
+            ".suggested-tag"
+        )
+        .forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        addTag(
+                            button.dataset.tag
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* =========================
        上个月
-    ========================= */
+    ========================== */
 
     const prevMonth =
         document.getElementById(
@@ -1627,18 +2751,21 @@ document.addEventListener("DOMContentLoaded", function () {
                         11;
 
                     calendarYear--;
+
                 }
 
 
                 await renderCalendar();
+
             }
         );
+
     }
 
 
     /* =========================
        下个月
-    ========================= */
+    ========================== */
 
     const nextMonth =
         document.getElementById(
@@ -1663,18 +2790,21 @@ document.addEventListener("DOMContentLoaded", function () {
                         0;
 
                     calendarYear++;
+
                 }
 
 
                 await renderCalendar();
+
             }
         );
+
     }
 
 
     /* =========================
        登录按钮
-    ========================= */
+    ========================== */
 
     const signUpButton =
         document.getElementById(
@@ -1688,6 +2818,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             signUp
         );
+
     }
 
 
@@ -1703,6 +2834,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             signIn
         );
+
     }
 
 
@@ -1718,6 +2850,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             signOut
         );
+
     }
 
 
@@ -1733,12 +2866,13 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             saveTodayData
         );
+
     }
 
 
     /* =========================
        回车登录
-    ========================= */
+    ========================== */
 
     const passwordInput =
         document.getElementById(
@@ -1760,15 +2894,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     event.preventDefault();
 
                     signIn();
+
                 }
+
             }
         );
+
     }
 
 
     /* =========================
        登录状态变化
-    ========================= */
+    ========================== */
 
     supabaseClient.auth.onAuthStateChange(
         function (
@@ -1786,25 +2923,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 user
             );
 
-
-            /*
-             * 不在这里重复执行大量
-             * 异步数据库操作。
-             *
-             * 登录/初始化由
-             * initialize() 负责。
-             */
         }
     );
 
 
     /* =========================
        初始化
-    ========================= */
+    ========================== */
 
     async function initialize() {
 
         updateAuthUI(null);
+
 
         await renderCalendar();
 
@@ -1819,6 +2949,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 user
             );
 
+
             await loadTodayFromSupabase();
 
             await loadHistory();
@@ -1830,7 +2961,9 @@ document.addEventListener("DOMContentLoaded", function () {
             updateAuthUI(null);
 
             await loadHistory();
+
         }
+
     }
 
 
