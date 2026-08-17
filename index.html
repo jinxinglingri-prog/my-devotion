@@ -34,17 +34,20 @@
                     type="email"
                     id="email"
                     placeholder="邮箱"
+                    autocomplete="email"
                 >
 
                 <input
                     type="password"
                     id="password"
                     placeholder="密码"
+                    autocomplete="current-password"
                 >
 
                 <div class="auth-buttons">
 
                     <button
+                        type="button"
                         id="signUpButton"
                         class="secondary-button"
                     >
@@ -52,6 +55,7 @@
                     </button>
 
                     <button
+                        type="button"
                         id="signInButton"
                     >
                         登录
@@ -70,6 +74,7 @@
                 <p id="userEmail"></p>
 
                 <button
+                    type="button"
                     id="signOutButton"
                     class="secondary-button"
                 >
@@ -196,6 +201,7 @@
             <div class="calendar-header">
 
                 <button
+                    type="button"
                     id="prevMonth"
                     class="calendar-nav"
                 >
@@ -207,6 +213,7 @@
                 </h2>
 
                 <button
+                    type="button"
                     id="nextMonth"
                     class="calendar-nav"
                 >
@@ -243,24 +250,23 @@
 
 
 
-        <!-- 保存按钮 -->
+        <!-- 保存 -->
 
         <button
+            type="button"
             id="saveButton"
             class="save-button"
+            disabled
         >
             保存今天的灵修
         </button>
 
 
-
-        <!-- 保存提示 -->
-
         <p id="message"></p>
 
 
 
-        <!-- 灵修历史 -->
+        <!-- 历史 -->
 
         <section class="history-section">
 
