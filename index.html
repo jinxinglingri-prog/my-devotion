@@ -22,9 +22,7 @@
     <main class="container">
 
 
-        <!-- =========================
-             登录区域
-        ========================== -->
+        <!-- 登录区域 -->
 
         <section class="auth-card">
 
@@ -87,9 +85,7 @@
 
 
 
-        <!-- =========================
-             页面标题
-        ========================== -->
+        <!-- 页面标题 -->
 
         <header>
 
@@ -108,9 +104,19 @@
 
 
 
-        <!-- =========================
-             今日经文
-        ========================== -->
+        <!-- 回到今天 -->
+
+        <button
+            id="backToTodayButton"
+            class="back-to-today-button"
+            type="button"
+        >
+            ← 回到今天灵修
+        </button>
+
+
+
+        <!-- 今日经文 -->
 
         <section class="card">
 
@@ -131,9 +137,7 @@
 
 
 
-        <!-- =========================
-             今日领受
-        ========================== -->
+        <!-- 今日领受 -->
 
         <section class="card">
 
@@ -150,9 +154,7 @@
 
 
 
-        <!-- =========================
-             今日回应
-        ========================== -->
+        <!-- 今日回应 -->
 
         <section class="card">
 
@@ -169,9 +171,7 @@
 
 
 
-        <!-- =========================
-             今日祷告
-        ========================== -->
+        <!-- 今日祷告 -->
 
         <section class="card">
 
@@ -186,9 +186,7 @@
 
 
 
-        <!-- =========================
-             今日学习
-        ========================== -->
+        <!-- 今日学习 -->
 
         <section class="card">
 
@@ -203,141 +201,7 @@
 
 
 
-        <!-- =========================
-             标签
-        ========================== -->
-
-        <section class="card tags-card">
-
-            <h2>🏷️ 今天的标签</h2>
-
-            <p class="tag-description">
-                用几个词记录今天灵修的主题，以后可以快速找到相关灵修。
-            </p>
-
-
-            <!-- 已选择标签 -->
-
-            <div
-                id="selectedTags"
-                class="selected-tags"
-            ></div>
-
-
-            <!-- 添加标签 -->
-
-            <div class="tag-input-row">
-
-                <input
-                    type="text"
-                    id="tagInput"
-                    placeholder="例如：信靠"
-                    maxlength="20"
-                >
-
-                <button
-                    type="button"
-                    id="addTagButton"
-                    class="add-tag-button"
-                >
-                    添加
-                </button>
-
-            </div>
-
-
-            <!-- 常用标签 -->
-
-            <p class="tag-label">
-                常用标签
-            </p>
-
-            <div
-                id="suggestedTags"
-                class="suggested-tags"
-            >
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="信靠"
-                >
-                    信靠
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="祷告"
-                >
-                    祷告
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="拖延"
-                >
-                    拖延
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="自律"
-                >
-                    自律
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="顺服"
-                >
-                    顺服
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="恩典"
-                >
-                    恩典
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="焦虑"
-                >
-                    焦虑
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="传福音"
-                >
-                    传福音
-                </button>
-
-                <button
-                    type="button"
-                    class="suggested-tag"
-                    data-tag="学习"
-                >
-                    学习
-                </button>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =========================
-             日历
-        ========================== -->
+        <!-- 日历 -->
 
         <section class="calendar-card">
 
@@ -346,7 +210,6 @@
                 <button
                     id="prevMonth"
                     class="calendar-nav"
-                    type="button"
                 >
                     ‹
                 </button>
@@ -358,7 +221,6 @@
                 <button
                     id="nextMonth"
                     class="calendar-nav"
-                    type="button"
                 >
                     ›
                 </button>
@@ -393,73 +255,24 @@
 
 
 
-        <!-- =========================
-             保存
-        ========================== -->
+        <!-- 保存按钮 -->
 
         <button
             id="saveButton"
             class="save-button"
-            type="button"
         >
             保存今天的灵修
         </button>
 
 
+
+        <!-- 保存提示 -->
+
         <p id="message"></p>
 
 
 
-        <!-- =========================
-             搜索
-        ========================== -->
-
-        <section class="search-card">
-
-            <h2>🔍 搜索我的灵修</h2>
-
-            <p class="search-description">
-                搜索标签、经文、领受、回应、祷告和学习内容。
-            </p>
-
-
-            <div class="search-input-row">
-
-                <input
-                    type="search"
-                    id="searchInput"
-                    placeholder="例如：信靠、拖延、祷告……"
-                >
-
-                <button
-                    type="button"
-                    id="clearSearchButton"
-                    class="clear-search-button"
-                >
-                    清除
-                </button>
-
-            </div>
-
-
-            <p
-                id="searchStatus"
-                class="search-status"
-            ></p>
-
-
-            <div
-                id="searchTags"
-                class="search-tags"
-            ></div>
-
-        </section>
-
-
-
-        <!-- =========================
-             灵修历史
-        ========================== -->
+        <!-- 灵修历史 -->
 
         <section class="history-section">
 
