@@ -66,8 +66,7 @@ h1 {
     margin-bottom: 20px;
 
     box-shadow:
-        0 3px 15px
-        rgba(0, 0, 0, 0.04);
+        0 3px 15px rgba(0, 0, 0, 0.04);
 }
 
 
@@ -80,12 +79,60 @@ h2 {
 }
 
 
+/* =========================
+   登录
+========================= */
+
+.auth-card {
+    border: 1px solid #eee8df;
+}
+
+
+.auth-status {
+    color: #777;
+
+    line-height: 1.6;
+}
+
+
+.auth-message {
+    text-align: center;
+
+    color: #777;
+
+    min-height: 22px;
+
+    margin-bottom: 0;
+}
+
+
+.logged-in-area {
+    text-align: center;
+}
+
+
+.logged-in-area p {
+    color: #777;
+
+    margin-bottom: 15px;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+
+/* =========================
+   输入框
+========================= */
+
 input,
 textarea {
     width: 100%;
 
-    border:
-        1px solid #e5e0d8;
+    border: 1px solid #e5e0d8;
 
     border-radius: 10px;
 
@@ -96,6 +143,10 @@ textarea {
     font-family: inherit;
 
     outline: none;
+
+    background: white;
+
+    color: #3f3b36;
 }
 
 
@@ -108,6 +159,8 @@ textarea {
     min-height: 130px;
 
     resize: vertical;
+
+    line-height: 1.7;
 }
 
 
@@ -116,6 +169,11 @@ textarea:focus {
     border-color: #aaa198;
 }
 
+
+
+/* =========================
+   按钮
+========================= */
 
 button {
     width: 100%;
@@ -135,6 +193,8 @@ button {
     cursor: pointer;
 
     margin-bottom: 12px;
+
+    font-family: inherit;
 }
 
 
@@ -143,16 +203,26 @@ button:hover {
 }
 
 
-#historyButton,
-#todayButton {
+button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+.secondary-button {
     background: transparent;
 
     color: #5f584f;
 
-    border:
-        1px solid #d8d1c8;
+    border: 1px solid #d8d1c8;
 }
 
+
+
+/* =========================
+   保存提示
+========================= */
 
 #message {
     text-align: center;
@@ -165,100 +235,163 @@ button:hover {
 }
 
 
-.tag-tip {
-    margin:
-        5px 0 0;
-
-    font-size: 13px;
-
-    color: #999087;
-}
-
 
 /* =========================
-   标签
-   ========================= */
+   日历
+========================= */
 
-.history-tags {
+.calendar-card {
+    padding: 20px;
+}
+
+
+.calendar-header {
     display: flex;
 
-    flex-wrap: wrap;
+    align-items: center;
 
-    gap: 7px;
+    justify-content: space-between;
 
-    margin-top: 12px;
+    margin-bottom: 15px;
 }
 
 
-.tag {
-    display: inline-block;
+.calendar-header h2 {
+    margin: 0;
 
-    padding:
-        5px 10px;
-
-    border-radius: 20px;
-
-    background: #f1eee8;
-
-    color: #71695f;
-
-    font-size: 13px;
-
-    line-height: 1.4;
+    font-size: 19px;
 }
 
 
-.tag-filters {
-    display: flex;
+.calendar-nav {
+    width: 42px;
 
-    flex-wrap: wrap;
+    height: 42px;
 
-    gap: 8px;
-
-    margin-bottom: 20px;
-}
-
-
-.tag-filter {
-    width: auto;
+    padding: 0;
 
     margin: 0;
 
-    padding:
-        9px 15px;
+    background: transparent;
 
-    border-radius: 20px;
+    color: #5f584f;
 
-    background: white;
+    border: 1px solid #e5e0d8;
 
-    color: #71695f;
+    font-size: 26px;
 
-    border:
-        1px solid #d8d1c8;
+    line-height: 42px;
+}
+
+
+.calendar-weekdays,
+.calendar-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 5px;
+}
+
+
+.calendar-weekdays {
+    margin-bottom: 5px;
+
+    color: #9a9187;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+.calendar-grid {
+    min-height: 220px;
+}
+
+
+.calendar-day {
+    position: relative;
+
+    min-height: 42px;
+
+    border-radius: 10px;
+
+    border: none;
+
+    padding: 0;
+
+    margin: 0;
+
+    background: transparent;
+
+    color: #4c4741;
 
     font-size: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 }
 
 
-.tag-filter:hover {
-    opacity: 1;
-
-    background: #f1eee8;
+.calendar-day:hover {
+    background: #f0ece6;
 }
 
 
-.tag-filter.active {
+.calendar-day.other-month {
+    color: #c8c1b8;
+}
+
+
+.calendar-day.today {
+    border: 1px solid #aaa198;
+}
+
+
+.calendar-day.has-record {
+    background: #eae5dd;
+
+    font-weight: 600;
+}
+
+
+.calendar-day.has-record:hover {
+    background: #ddd6cb;
+}
+
+
+.calendar-day.selected {
     background: #5f584f;
 
     color: white;
-
-    border-color: #5f584f;
 }
 
 
+.calendar-day.selected:hover {
+    background: #5f584f;
+}
+
+
+.calendar-hint {
+    text-align: center;
+
+    color: #9a9187;
+
+    font-size: 13px;
+
+    margin: 15px 0 0;
+}
+
+
+
 /* =========================
-   历史
-   ========================= */
+   灵修历史
+========================= */
 
 .history-section {
     margin-top: 40px;
@@ -281,8 +414,7 @@ button:hover {
 
     cursor: pointer;
 
-    border:
-        1px solid #eee8df;
+    border: 1px solid #eee8df;
 
     transition:
         transform 0.15s ease,
@@ -291,12 +423,10 @@ button:hover {
 
 
 .history-item:hover {
-    transform:
-        translateY(-2px);
+    transform: translateY(-2px);
 
     box-shadow:
-        0 5px 18px
-        rgba(0, 0, 0, 0.06);
+        0 5px 18px rgba(0, 0, 0, 0.06);
 }
 
 
@@ -327,499 +457,23 @@ button:hover {
 }
 
 
-/* =========================
-   我的灵修
-   ========================= */
-
-.stats-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 12px;
-}
-
-
-.stat-card {
-    background: white;
-
-    border:
-        1px solid #eee8df;
-
-    border-radius: 16px;
-
-    padding:
-        22px 15px;
-
-    text-align: center;
-}
-
-
-.stat-number {
-    font-size: 28px;
-
-    font-weight: 500;
-
-    color: #5f584f;
-
-    margin-bottom: 7px;
-
-    word-break: break-word;
-}
-
-
-.small-stat {
-    font-size: 20px;
-}
-
-
-.stat-label {
-    font-size: 13px;
-
-    color: #8a8178;
-}
-
-
-/* =========================
-   本月完成率
-   ========================= */
-
-.progress-card {
-    background: white;
-
-    border:
-        1px solid #eee8df;
-
-    border-radius: 16px;
-
-    padding: 20px;
-
-    margin-top: 12px;
-}
-
-
-.progress-title {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    font-size: 14px;
-
-    color: #71695f;
-
-    margin-bottom: 12px;
-}
-
-
-.progress-title strong {
-    color: #5f584f;
-
-    font-weight: 500;
-}
-
-
-.progress-bar {
-    width: 100%;
-
-    height: 10px;
-
-    background: #eeeae4;
-
-    border-radius: 20px;
-
-    overflow: hidden;
-}
-
-
-.progress-fill {
-    height: 100%;
-
-    width: 0%;
-
-    background: #5f584f;
-
-    border-radius: 20px;
-
-    transition:
-        width 0.4s ease;
-}
-
-
-/* =========================
-   统计说明
-   ========================= */
-
-.stats-summary {
+.no-history {
     background: white;
 
     border-radius: 16px;
 
-    padding: 18px 20px;
-
-    margin-top: 12px;
-
-    border:
-        1px solid #eee8df;
+    padding: 25px;
 
     text-align: center;
-}
-
-
-.stats-summary p {
-    margin: 0;
-
-    color: #8a8178;
-
-    font-size: 14px;
-
-    line-height: 1.7;
-}
-
-
-/* =========================
-   灵修趋势
-   ========================= */
-
-.trend-card {
-    background: white;
-
-    border:
-        1px solid #eee8df;
-
-    border-radius: 16px;
-
-    padding: 20px;
-
-    margin-top: 12px;
-}
-
-
-.trend-card h3 {
-    margin:
-        0 0 18px;
-
-    font-size: 16px;
-
-    font-weight: 500;
-}
-
-
-.trend-list {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 12px;
-}
-
-
-.trend-row {
-    display: grid;
-
-    grid-template-columns:
-        40px 1fr 45px;
-
-    align-items: center;
-
-    gap: 10px;
-}
-
-
-.trend-label {
-    font-size: 13px;
 
     color: #8a8178;
 }
 
-
-.trend-bar-area {
-    height: 9px;
-
-    background: #eeeae4;
-
-    border-radius: 20px;
-
-    overflow: hidden;
-}
-
-
-.trend-bar {
-    height: 100%;
-
-    width: 0%;
-
-    background: #5f584f;
-
-    border-radius: 20px;
-
-    transition:
-        width 0.4s ease;
-}
-
-
-.trend-count {
-    text-align: right;
-
-    font-size: 12px;
-
-    color: #8a8178;
-}
-
-
-/* =========================
-   日历
-   ========================= */
-
-.calendar-header {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 15px;
-}
-
-
-#calendarTitle {
-    font-size: 18px;
-
-    font-weight: 500;
-}
-
-
-.calendar-nav {
-    width: 42px;
-
-    height: 42px;
-
-    padding: 0;
-
-    margin: 0;
-
-    border-radius: 50%;
-
-    background: transparent;
-
-    color: #5f584f;
-
-    border:
-        1px solid #d8d1c8;
-
-    font-size: 26px;
-
-    line-height: 1;
-}
-
-
-.calendar-nav:hover {
-    background: #f7f5f0;
-}
-
-
-.calendar-weekdays,
-.calendar {
-    display: grid;
-
-    grid-template-columns:
-        repeat(7, 1fr);
-
-    gap: 6px;
-}
-
-
-.calendar-weekdays {
-    margin-bottom: 6px;
-}
-
-
-.calendar-weekdays div {
-    text-align: center;
-
-    font-size: 13px;
-
-    color: #999087;
-
-    padding: 8px 0;
-}
-
-
-.calendar-day {
-    min-height: 52px;
-
-    border-radius: 10px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    cursor: pointer;
-
-    background: #faf9f6;
-}
-
-
-.calendar-day:hover {
-    background: #f0ece6;
-}
-
-
-.calendar-day.empty {
-    background: transparent;
-
-    cursor: default;
-}
-
-
-.calendar-number {
-    font-size: 15px;
-}
-
-
-.calendar-day.today {
-    border:
-        1px solid #8f877e;
-}
-
-
-.calendar-dot {
-    font-size: 7px;
-
-    margin-top: 3px;
-}
-
-
-.calendar-tip {
-    text-align: center;
-
-    color: #999087;
-
-    font-size: 13px;
-
-    margin-top: 15px;
-}
-
-
-/* =========================
-   搜索
-   ========================= */
-
-.search-box {
-    display: flex;
-
-    gap: 10px;
-
-    align-items: center;
-}
-
-
-.search-box input {
-    flex: 1;
-
-    margin-bottom: 0;
-}
-
-
-.search-box button {
-    width: auto;
-
-    min-width: 90px;
-
-    margin-bottom: 0;
-
-    padding:
-        14px 20px;
-}
-
-
-.search-message {
-    text-align: center;
-
-    color: #8a8178;
-
-    font-size: 14px;
-
-    min-height: 20px;
-
-    margin:
-        15px 0 10px;
-}
-
-
-.search-results {
-    margin-top: 10px;
-}
-
-
-.search-result-item {
-    background: white;
-
-    border-radius: 16px;
-
-    padding: 20px;
-
-    margin-bottom: 12px;
-
-    cursor: pointer;
-
-    border:
-        1px solid #eee8df;
-
-    transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
-}
-
-
-.search-result-item:hover {
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 5px 18px
-        rgba(0, 0, 0, 0.06);
-}
-
-
-.search-result-date {
-    font-size: 16px;
-
-    font-weight: 500;
-
-    margin-bottom: 7px;
-}
-
-
-.search-result-bible {
-    font-size: 14px;
-
-    color: #71695f;
-
-    margin-bottom: 9px;
-}
-
-
-.search-result-preview {
-    font-size: 14px;
-
-    line-height: 1.7;
-
-    color: #8a8178;
-}
 
 
 /* =========================
    手机
-   ========================= */
+========================= */
 
 @media (max-width: 600px) {
 
@@ -843,83 +497,16 @@ button:hover {
     }
 
 
-    .stats-grid {
-        gap: 8px;
-    }
+    .calendar-day {
+        min-height: 38px;
 
-
-    .stat-card {
-        padding:
-            18px 10px;
-    }
-
-
-    .stat-number {
-        font-size: 23px;
-    }
-
-
-    .small-stat {
-        font-size: 17px;
-    }
-
-
-    .progress-title {
         font-size: 13px;
     }
 
 
     .calendar-weekdays,
-    .calendar {
+    .calendar-grid {
         gap: 3px;
-    }
-
-
-    .calendar-day {
-        min-height: 44px;
-
-        border-radius: 8px;
-    }
-
-
-    .calendar-number {
-        font-size: 14px;
-    }
-
-
-    .calendar-nav {
-        width: 38px;
-
-        height: 38px;
-    }
-
-
-    .search-box {
-        gap: 7px;
-    }
-
-
-    .search-box button {
-        min-width: 72px;
-
-        padding:
-            14px 12px;
-    }
-
-
-    .tag-filter {
-        padding:
-            8px 12px;
-
-        font-size: 13px;
-    }
-
-
-    .trend-row {
-        grid-template-columns:
-            35px 1fr 40px;
-
-        gap: 7px;
     }
 
 }
