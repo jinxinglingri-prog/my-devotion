@@ -24,9 +24,84 @@ body {
 
     margin: 0 auto;
 
-    padding: 50px 0 80px;
+    padding: 35px 0 80px;
 }
 
+
+/* =========================
+   登录
+========================= */
+
+.auth-card {
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    margin-bottom: 35px;
+
+    box-shadow:
+        0 3px 15px rgba(0, 0, 0, 0.04);
+}
+
+
+.auth-card h2 {
+    margin-top: 0;
+
+    margin-bottom: 20px;
+}
+
+
+.auth-card input {
+    margin-bottom: 12px;
+}
+
+
+.auth-buttons {
+    display: flex;
+
+    gap: 12px;
+}
+
+
+.auth-buttons button {
+    flex: 1;
+}
+
+
+.secondary-button {
+    background: transparent;
+
+    color: #5f584f;
+
+    border: 1px solid #d8d1c8;
+}
+
+
+#userEmail {
+    color: #777;
+
+    margin-bottom: 15px;
+
+    word-break: break-word;
+}
+
+
+#authMessage {
+    text-align: center;
+
+    color: #777;
+
+    min-height: 22px;
+
+    margin-bottom: 0;
+}
+
+
+/* =========================
+   页面标题
+========================= */
 
 header {
     text-align: center;
@@ -56,6 +131,10 @@ h1 {
 }
 
 
+/* =========================
+   内容卡片
+========================= */
+
 .card {
     background: white;
 
@@ -78,55 +157,6 @@ h2 {
     margin-top: 0;
 }
 
-
-/* =========================
-   登录
-========================= */
-
-.auth-card {
-    border: 1px solid #eee8df;
-}
-
-
-.auth-status {
-    color: #777;
-
-    line-height: 1.6;
-}
-
-
-.auth-message {
-    text-align: center;
-
-    color: #777;
-
-    min-height: 22px;
-
-    margin-bottom: 0;
-}
-
-
-.logged-in-area {
-    text-align: center;
-}
-
-
-.logged-in-area p {
-    color: #777;
-
-    margin-bottom: 15px;
-}
-
-
-.hidden {
-    display: none !important;
-}
-
-
-
-/* =========================
-   输入框
-========================= */
 
 input,
 textarea {
@@ -159,8 +189,6 @@ textarea {
     min-height: 130px;
 
     resize: vertical;
-
-    line-height: 1.7;
 }
 
 
@@ -168,7 +196,6 @@ input:focus,
 textarea:focus {
     border-color: #aaa198;
 }
-
 
 
 /* =========================
@@ -193,8 +220,6 @@ button {
     cursor: pointer;
 
     margin-bottom: 12px;
-
-    font-family: inherit;
 }
 
 
@@ -210,19 +235,12 @@ button:disabled {
 }
 
 
-.secondary-button {
-    background: transparent;
+.save-button {
+    margin-top: 5px;
 
-    color: #5f584f;
-
-    border: 1px solid #d8d1c8;
+    font-size: 18px;
 }
 
-
-
-/* =========================
-   保存提示
-========================= */
 
 #message {
     text-align: center;
@@ -235,100 +253,96 @@ button:disabled {
 }
 
 
-
 /* =========================
    日历
 ========================= */
 
 .calendar-card {
-    padding: 20px;
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 28px 24px;
+
+    margin: 35px 0 25px;
+
+    box-shadow:
+        0 3px 15px rgba(0, 0, 0, 0.04);
 }
 
 
 .calendar-header {
-    display: flex;
+    display: grid;
+
+    grid-template-columns: 60px 1fr 60px;
 
     align-items: center;
 
-    justify-content: space-between;
-
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 
 .calendar-header h2 {
+    text-align: center;
+
     margin: 0;
 
-    font-size: 19px;
+    font-size: 25px;
+
+    font-weight: 600;
 }
 
 
 .calendar-nav {
-    width: 42px;
+    width: 48px;
 
-    height: 42px;
+    height: 48px;
 
     padding: 0;
 
     margin: 0;
 
-    background: transparent;
+    background: white;
 
     color: #5f584f;
 
     border: 1px solid #e5e0d8;
 
-    font-size: 26px;
+    border-radius: 14px;
 
-    line-height: 42px;
+    font-size: 32px;
+
+    line-height: 1;
 }
 
 
-.calendar-weekdays,
-.calendar-grid {
+.weekdays,
+.calendar-days {
     display: grid;
 
     grid-template-columns:
         repeat(7, 1fr);
 
-    gap: 5px;
-}
-
-
-.calendar-weekdays {
-    margin-bottom: 5px;
-
-    color: #9a9187;
-
-    font-size: 13px;
-
     text-align: center;
 }
 
 
-.calendar-grid {
-    min-height: 220px;
+.weekdays {
+    margin-bottom: 8px;
+
+    color: #9a9187;
+
+    font-size: 14px;
+}
+
+
+.calendar-days {
+    row-gap: 8px;
 }
 
 
 .calendar-day {
-    position: relative;
-
-    min-height: 42px;
-
-    border-radius: 10px;
-
-    border: none;
-
-    padding: 0;
-
-    margin: 0;
-
-    background: transparent;
-
-    color: #4c4741;
-
-    font-size: 14px;
+    min-height: 54px;
 
     display: flex;
 
@@ -338,42 +352,76 @@ button:disabled {
 }
 
 
-.calendar-day:hover {
-    background: #f0ece6;
+.calendar-day button {
+    width: 48px;
+
+    height: 48px;
+
+    padding: 0;
+
+    margin: 0;
+
+    background: transparent;
+
+    color: #3f3b36;
+
+    border-radius: 14px;
+
+    font-size: 16px;
 }
 
 
-.calendar-day.other-month {
-    color: #c8c1b8;
+.calendar-day button:hover {
+    background: #f1eee8;
 }
 
 
-.calendar-day.today {
+.calendar-day.other-month button {
+    color: #c9c3bb;
+}
+
+
+.calendar-day.today button {
     border: 1px solid #aaa198;
-}
-
-
-.calendar-day.has-record {
-    background: #eae5dd;
 
     font-weight: 600;
 }
 
 
-.calendar-day.has-record:hover {
-    background: #ddd6cb;
+.calendar-day.selected button {
+    background: #e9e4dc;
+
+    border: 1px solid #aaa198;
+
+    font-weight: 600;
 }
 
 
-.calendar-day.selected {
-    background: #5f584f;
+.calendar-day.has-record button {
+    position: relative;
 
-    color: white;
+    font-weight: 600;
 }
 
 
-.calendar-day.selected:hover {
-    background: #5f584f;
+.calendar-day.has-record button::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 5px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 5px;
+
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #6b6258;
 }
 
 
@@ -382,15 +430,14 @@ button:disabled {
 
     color: #9a9187;
 
-    font-size: 13px;
+    margin: 20px 0 0;
 
-    margin: 15px 0 0;
+    font-size: 14px;
 }
 
 
-
 /* =========================
-   灵修历史
+   历史
 ========================= */
 
 .history-section {
@@ -457,20 +504,6 @@ button:disabled {
 }
 
 
-.no-history {
-    background: white;
-
-    border-radius: 16px;
-
-    padding: 25px;
-
-    text-align: center;
-
-    color: #8a8178;
-}
-
-
-
 /* =========================
    手机
 ========================= */
@@ -478,7 +511,7 @@ button:disabled {
 @media (max-width: 600px) {
 
     .container {
-        padding-top: 30px;
+        padding-top: 25px;
     }
 
 
@@ -492,21 +525,50 @@ button:disabled {
     }
 
 
+    .calendar-card {
+        padding: 20px 12px;
+    }
+
+
+    .calendar-header {
+        grid-template-columns:
+            50px 1fr 50px;
+    }
+
+
+    .calendar-header h2 {
+        font-size: 22px;
+    }
+
+
+    .calendar-nav {
+        width: 44px;
+
+        height: 44px;
+    }
+
+
+    .calendar-day {
+        min-height: 48px;
+    }
+
+
+    .calendar-day button {
+        width: 42px;
+
+        height: 42px;
+    }
+
+
     .history-item {
         padding: 17px;
     }
 
 
-    .calendar-day {
-        min-height: 38px;
+    .auth-buttons {
+        flex-direction: column;
 
-        font-size: 13px;
-    }
-
-
-    .calendar-weekdays,
-    .calendar-grid {
-        gap: 3px;
+        gap: 0;
     }
 
 }
