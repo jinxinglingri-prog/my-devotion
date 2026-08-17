@@ -96,8 +96,6 @@ body {
     min-height: 22px;
 
     margin-bottom: 0;
-
-    line-height: 1.6;
 }
 
 
@@ -252,8 +250,154 @@ button:disabled {
     margin-top: 15px;
 
     min-height: 22px;
+}
 
-    line-height: 1.6;
+
+/* =========================
+   标签
+========================= */
+
+.tags-card {
+    margin-bottom: 25px;
+}
+
+
+.tag-description {
+    color: #8a8178;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-top: -8px;
+
+    margin-bottom: 18px;
+}
+
+
+.selected-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    min-height: 10px;
+
+    margin-bottom: 15px;
+}
+
+
+.tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    width: auto;
+
+    padding: 7px 11px;
+
+    margin: 0;
+
+    border-radius: 20px;
+
+    background: #eee9e1;
+
+    color: #5f584f;
+
+    font-size: 14px;
+
+    line-height: 1.2;
+}
+
+
+.tag-remove {
+    width: auto;
+
+    padding: 0;
+
+    margin: 0;
+
+    background: transparent;
+
+    color: #8a8178;
+
+    font-size: 16px;
+
+    line-height: 1;
+
+    border: none;
+}
+
+
+.tag-input-row {
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+
+.tag-input-row input {
+    flex: 1;
+
+    margin-bottom: 0;
+}
+
+
+.add-tag-button {
+    width: auto;
+
+    min-width: 80px;
+
+    margin: 0;
+
+    padding: 14px 18px;
+}
+
+
+.tag-label {
+    color: #8a8178;
+
+    font-size: 14px;
+
+    margin: 20px 0 10px;
+}
+
+
+.suggested-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+.suggested-tag {
+    width: auto;
+
+    padding: 8px 13px;
+
+    margin: 0;
+
+    border: 1px solid #e1dbd2;
+
+    background: #faf8f4;
+
+    color: #6d655c;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+}
+
+
+.suggested-tag:hover {
+    background: #eee9e1;
 }
 
 
@@ -441,6 +585,189 @@ button:disabled {
 
 
 /* =========================
+   搜索
+========================= */
+
+.search-card {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    margin: 35px 0 25px;
+
+    box-shadow:
+        0 3px 15px rgba(0, 0, 0, 0.04);
+}
+
+
+.search-card h2 {
+    margin-bottom: 8px;
+}
+
+
+.search-description {
+    color: #8a8178;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-top: 0;
+
+    margin-bottom: 18px;
+}
+
+
+.search-input-row {
+    display: flex;
+
+    gap: 10px;
+}
+
+
+.search-input-row input {
+    flex: 1;
+
+    margin-bottom: 0;
+}
+
+
+.clear-search-button {
+    width: auto;
+
+    min-width: 65px;
+
+    padding: 14px;
+
+    margin: 0;
+
+    background: transparent;
+
+    color: #5f584f;
+
+    border: 1px solid #d8d1c8;
+}
+
+
+.search-status {
+    color: #8a8178;
+
+    font-size: 14px;
+
+    min-height: 20px;
+
+    margin: 15px 0 8px;
+}
+
+
+.search-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+.search-tag {
+    width: auto;
+
+    padding: 7px 12px;
+
+    margin: 0;
+
+    border-radius: 20px;
+
+    background: #eee9e1;
+
+    color: #5f584f;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   搜索结果
+========================= */
+
+.search-result {
+    margin-top: 15px;
+
+    background: #faf8f4;
+
+    border-radius: 14px;
+
+    padding: 16px;
+
+    cursor: pointer;
+
+    border: 1px solid #eee8df;
+}
+
+
+.search-result:hover {
+    background: #f4f1eb;
+}
+
+
+.search-result-date {
+    font-size: 16px;
+
+    font-weight: 500;
+
+    margin-bottom: 6px;
+}
+
+
+.search-result-bible {
+    color: #71695f;
+
+    font-size: 14px;
+
+    margin-bottom: 9px;
+}
+
+
+.search-result-preview {
+    color: #8a8178;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+.search-result-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 10px;
+}
+
+
+.search-result-tag {
+    width: auto;
+
+    padding: 4px 9px;
+
+    margin: 0;
+
+    background: #e9e4dc;
+
+    color: #6b6258;
+
+    border-radius: 15px;
+
+    font-size: 12px;
+}
+
+
+/* =========================
    历史
 ========================= */
 
@@ -505,6 +832,34 @@ button:disabled {
     line-height: 1.7;
 
     color: #8a8178;
+}
+
+
+.history-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 12px;
+}
+
+
+.history-tag {
+    width: auto;
+
+    padding: 5px 9px;
+
+    margin: 0;
+
+    background: #eee9e1;
+
+    color: #6b6258;
+
+    border-radius: 15px;
+
+    font-size: 12px;
 }
 
 
@@ -573,6 +928,28 @@ button:disabled {
         flex-direction: column;
 
         gap: 0;
+    }
+
+
+    .tag-input-row {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .add-tag-button {
+        width: 100%;
+    }
+
+
+    .search-input-row {
+        flex-direction: column;
+    }
+
+
+    .clear-search-button {
+        width: 100%;
     }
 
 }
