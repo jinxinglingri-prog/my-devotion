@@ -1,17 +1,14 @@
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-
-    /* ==================================================
+    /* =========================
        Supabase 设置
-    ================================================== */
+    ========================= */
 
     const SUPABASE_URL =
         "https://asfqtznfhljxwfktuido.supabase.co";
 
-
     const SUPABASE_KEY =
         "sb_publishable_Vu7U10XTkqZaOPa-cj9BXQ_TKxgkEwy";
-
 
     const supabaseClient =
         window.supabase.createClient(
@@ -20,10 +17,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         );
 
 
-
-    /* ==================================================
+    /* =========================
        灵修字段
-    ================================================== */
+    ========================= */
 
     const fields = [
         "bibleReference",
@@ -35,21 +31,27 @@ document.addEventListener("DOMContentLoaded", async function () {
     ];
 
 
+    /* =========================
+       当前日期
+    ========================= */
 
-    /* ==================================================
-       今天日期
-    ================================================== */
+    const now = new Date();
 
-    let currentDate =
-        new Date();
+    let selectedDate =
+        formatDate(now);
+
+    let calendarYear =
+        now.getFullYear();
+
+    let calendarMonth =
+        now.getMonth();
 
 
-    let calendarDate =
-        new Date();
+    /* =========================
+       日期格式
+    ========================= */
 
-
-
-    function getDateKey(date) {
+    function formatDate(date) {
 
         const year =
             date.getFullYear();
@@ -68,377 +70,408 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
 
+    function formatChineseDate(dateString) {
 
-    const todayKey =
-        getDateKey(currentDate);
+        const parts =
+            dateString.split("-");
+
+        const year =
+            Number(parts[0]);
+
+        const month =
+            Number(parts[1]);
+
+        const day =
+            Number(parts[2]);
+
+        const date =
+            new Date(
+                year,
+                month - 1,
+                day
+            );
+
+        return date.toLocaleDateString(
+            "zh-CN",
+            {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                weekday: "long"
+            }
+        );
+    }
 
 
-
-    /* ==================================================
-       页面日期
-    ================================================== */
+    /* =========================
+       页面今天日期
+    ========================= */
 
     const todayElement =
         document.getElementById("today");
 
-
     if (todayElement) {
 
         todayElement.textContent =
-            currentDate.toLocaleDateString(
-                "zh-CN",
-                {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    weekday: "long"
-                }
-            );
+            formatChineseDate(selectedDate);
 
     }
 
 
+    /* =========================
+       登录状态
+    ========================= */
 
-    /* ==================================================
-       获取元素
-    ================================================== */
+    async function checkUser() {
 
-    const saveButton =
-        document.getElementById(
-            "saveButton"
+        const {
+            data
+        } =
+            await supabaseClient.auth.getUser();
+
+        updateAuthUI(
+            data.user
         );
 
+        if (data.user) {
 
-    const message =
-        document.getElementById(
-            "message"
-        );
+            await loadTodayFromSupabase();
 
+            await loadHistory();
 
-    const authStatus =
-        document.getElementById(
-            "authStatus"
-        );
+            await renderCalendar();
 
+        } else {
 
-    const authMessage =
-        document.getElementById(
-            "authMessage"
-        );
-
-
-    const authForm =
-        document.getElementById(
-            "authForm"
-        );
-
-
-    const loggedInArea =
-        document.getElementById(
-            "loggedInArea"
-        );
-
-
-    const userEmail =
-        document.getElementById(
-            "userEmail"
-        );
-
-
-    const emailInput =
-        document.getElementById(
-            "email"
-        );
-
-
-    const passwordInput =
-        document.getElementById(
-            "password"
-        );
-
-
-    const signUpButton =
-        document.getElementById(
-            "signUpButton"
-        );
-
-
-    const signInButton =
-        document.getElementById(
-            "signInButton"
-        );
-
-
-    const signOutButton =
-        document.getElementById(
-            "signOutButton"
-        );
-
-
-    const historyList =
-        document.getElementById(
-            "historyList"
-        );
-
-
-    const calendarGrid =
-        document.getElementById(
-            "calendarGrid"
-        );
-
-
-    const calendarTitle =
-        document.getElementById(
-            "calendarTitle"
-        );
-
-
-    const prevMonthButton =
-        document.getElementById(
-            "prevMonthButton"
-        );
-
-
-    const nextMonthButton =
-        document.getElementById(
-            "nextMonthButton"
-        );
-
-
-
-    /* ==================================================
-       当前登录用户
-    ================================================== */
-
-    let currentUser = null;
-
-
-
-    /* ==================================================
-       设置消息
-    ================================================== */
-
-    function showMessage(text) {
-
-        if (message) {
-
-            message.textContent =
-                text;
+            renderCalendar();
 
         }
 
     }
 
 
-    function showAuthMessage(text) {
+    function updateAuthUI(user) {
+
+        const loggedOut =
+            document.getElementById(
+                "authLoggedOut"
+            );
+
+        const loggedIn =
+            document.getElementById(
+                "authLoggedIn"
+            );
+
+        const userEmail =
+            document.getElementById(
+                "userEmail"
+            );
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+
+        if (user) {
+
+            if (loggedOut) {
+                loggedOut.style.display =
+                    "none";
+            }
+
+            if (loggedIn) {
+                loggedIn.style.display =
+                    "block";
+            }
+
+            if (userEmail) {
+
+                userEmail.textContent =
+                    "已登录：" +
+                    user.email;
+
+            }
+
+            if (saveButton) {
+                saveButton.disabled =
+                    false;
+            }
+
+        } else {
+
+            if (loggedOut) {
+                loggedOut.style.display =
+                    "block";
+            }
+
+            if (loggedIn) {
+                loggedIn.style.display =
+                    "none";
+            }
+
+            if (saveButton) {
+                saveButton.disabled =
+                    true;
+            }
+
+        }
+
+    }
+
+
+    /* =========================
+       注册
+    ========================= */
+
+    async function signUp() {
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value;
+
+
+        const authMessage =
+            document.getElementById(
+                "authMessage"
+            );
+
+
+        if (!email || !password) {
+
+            authMessage.textContent =
+                "请输入邮箱和密码。";
+
+            return;
+
+        }
+
+
+        authMessage.textContent =
+            "正在注册……";
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.signUp({
+                email: email,
+                password: password
+            });
+
+
+        if (error) {
+
+            authMessage.textContent =
+                "注册失败：" +
+                error.message;
+
+            return;
+
+        }
+
+
+        if (
+            data.user &&
+            !data.session
+        ) {
+
+            authMessage.textContent =
+                "注册成功！请打开邮箱，点击确认链接，然后回来登录。";
+
+        } else {
+
+            authMessage.textContent =
+                "注册成功！";
+
+        }
+
+    }
+
+
+    /* =========================
+       登录
+    ========================= */
+
+    async function signIn() {
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value;
+
+
+        const authMessage =
+            document.getElementById(
+                "authMessage"
+            );
+
+
+        if (!email || !password) {
+
+            authMessage.textContent =
+                "请输入邮箱和密码。";
+
+            return;
+
+        }
+
+
+        authMessage.textContent =
+            "正在登录……";
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+
+        if (error) {
+
+            authMessage.textContent =
+                "登录失败：" +
+                error.message;
+
+            return;
+
+        }
+
+
+        authMessage.textContent =
+            "登录成功！";
+
+
+        updateAuthUI(
+            data.user
+        );
+
+
+        await loadTodayFromSupabase();
+
+        await loadHistory();
+
+        await renderCalendar();
+
+    }
+
+
+    /* =========================
+       退出登录
+    ========================= */
+
+    async function signOut() {
+
+        await supabaseClient.auth.signOut();
+
+        clearFields();
+
+        updateAuthUI(null);
+
+        const authMessage =
+            document.getElementById(
+                "authMessage"
+            );
 
         if (authMessage) {
 
             authMessage.textContent =
-                text;
+                "已退出登录。";
 
         }
 
     }
 
 
+    /* =========================
+       清空表单
+    ========================= */
 
-    /* ==================================================
-       读取当前登录状态
-    ================================================== */
+    function clearFields() {
 
-    async function checkUser() {
+        fields.forEach(
+            function (field) {
+
+                const element =
+                    document.getElementById(
+                        field
+                    );
+
+                if (element) {
+
+                    element.value = "";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       从 Supabase 读取某一天
+    ========================= */
+
+    async function getDevotionByDate(
+        dateString
+    ) {
+
+        const {
+            data: userData
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        const user =
+            userData.user;
+
+
+        if (!user) {
+
+            return null;
+
+        }
+
 
         const {
             data,
             error
         } =
             await supabaseClient
-                .auth
-                .getUser();
+                .from("devotions")
+                .select("*")
+                .eq("user_id", user.id)
+                .eq("date", dateString)
+                .maybeSingle();
 
 
         if (error) {
 
             console.error(
-                "获取用户失败：",
+                "读取灵修失败：",
                 error
             );
 
-            currentUser = null;
-
-            updateAuthUI();
-
-            return;
+            return null;
 
         }
-
-
-        currentUser =
-            data.user || null;
-
-
-        updateAuthUI();
-
-
-        if (currentUser) {
-
-            await loadTodayData();
-
-            await loadHistory();
-
-            renderCalendar();
-
-        } else {
-
-            clearForm();
-
-            renderCalendar();
-
-            renderEmptyHistory();
-
-        }
-
-    }
-
-
-
-    /* ==================================================
-       更新登录界面
-    ================================================== */
-
-    function updateAuthUI() {
-
-        if (!authStatus) {
-            return;
-        }
-
-
-        if (currentUser) {
-
-            authStatus.textContent =
-                "你的灵修已经连接到云端。";
-
-
-            if (userEmail) {
-
-                userEmail.textContent =
-                    currentUser.email || "";
-
-            }
-
-
-            if (authForm) {
-
-                authForm.classList.add(
-                    "hidden"
-                );
-
-            }
-
-
-            if (loggedInArea) {
-
-                loggedInArea.classList.remove(
-                    "hidden"
-                );
-
-            }
-
-
-            if (saveButton) {
-
-                saveButton.disabled =
-                    false;
-
-            }
-
-        } else {
-
-            authStatus.textContent =
-                "请先注册或登录，才能保存云端灵修。";
-
-
-            if (authForm) {
-
-                authForm.classList.remove(
-                    "hidden"
-                );
-
-            }
-
-
-            if (loggedInArea) {
-
-                loggedInArea.classList.add(
-                    "hidden"
-                );
-
-            }
-
-
-            if (saveButton) {
-
-                saveButton.disabled =
-                    true;
-
-            }
-
-        }
-
-    }
-
-
-
-    /* ==================================================
-       清空表单
-    ================================================== */
-
-    function clearForm() {
-
-        fields.forEach(function (field) {
-
-            const element =
-                document.getElementById(
-                    field
-                );
-
-            if (element) {
-
-                element.value =
-                    "";
-
-            }
-
-        });
-
-    }
-
-
-
-    /* ==================================================
-       获取表单数据
-    ================================================== */
-
-    function getFormData() {
-
-        const data = {};
-
-
-        fields.forEach(function (field) {
-
-            const element =
-                document.getElementById(
-                    field
-                );
-
-
-            data[field] =
-                element
-                    ? element.value
-                    : "";
-
-        });
 
 
         return data;
@@ -446,610 +479,822 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
 
+    /* =========================
+       读取今天的灵修
+    ========================= */
 
-    /* ==================================================
-       把数据库字段转换成表单数据
-    ================================================== */
+    async function loadTodayFromSupabase() {
 
-    function fillForm(data) {
-
-        fields.forEach(function (field) {
-
-            const element =
-                document.getElementById(
-                    field
-                );
+        const data =
+            await getDevotionByDate(
+                selectedDate
+            );
 
 
-            if (
-                element &&
-                data &&
-                data[field] !== undefined
-            ) {
+        if (!data) {
 
-                element.value =
-                    data[field] || "";
+            return;
+
+        }
+
+
+        fillFields(data);
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        if (message) {
+
+            message.textContent =
+                "已读取今天的灵修。";
+
+        }
+
+    }
+
+
+    /* =========================
+       把数据库数据放入页面
+    ========================= */
+
+    function fillFields(data) {
+
+        const mapping = {
+
+            bibleReference:
+                "bible_reference",
+
+            bibleText:
+                "bible_text",
+
+            reflection:
+                "reflection",
+
+            response:
+                "response",
+
+            prayer:
+                "prayer",
+
+            learning:
+                "learning"
+
+        };
+
+
+        fields.forEach(
+            function (field) {
+
+                const element =
+                    document.getElementById(
+                        field
+                    );
+
+                const databaseField =
+                    mapping[field];
+
+
+                if (
+                    element &&
+                    data[databaseField] !==
+                        undefined
+                ) {
+
+                    element.value =
+                        data[databaseField] || "";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       保存今天的灵修
+    ========================= */
+
+    async function saveTodayData() {
+
+        const {
+            data: userData
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        const user =
+            userData.user;
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        if (!user) {
+
+            if (message) {
+
+                message.textContent =
+                    "请先登录。";
 
             }
 
+            return;
+
+        }
+
+
+        const data = {
+
+            user_id:
+                user.id,
+
+            date:
+                selectedDate,
+
+            bible_reference:
+                document.getElementById(
+                    "bibleReference"
+                ).value,
+
+            bible_text:
+                document.getElementById(
+                    "bibleText"
+                ).value,
+
+            reflection:
+                document.getElementById(
+                    "reflection"
+                ).value,
+
+            response:
+                document.getElementById(
+                    "response"
+                ).value,
+
+            prayer:
+                document.getElementById(
+                    "prayer"
+                ).value,
+
+            learning:
+                document.getElementById(
+                    "learning"
+                ).value
+
+        };
+
+
+        /*
+         * 这里不用 upsert，
+         * 避免要求数据库必须有
+         * user_id + date 的唯一索引。
+         */
+
+        const {
+            data: existing,
+            error: findError
+        } =
+            await supabaseClient
+                .from("devotions")
+                .select("id")
+                .eq("user_id", user.id)
+                .eq("date", selectedDate)
+                .maybeSingle();
+
+
+        if (findError) {
+
+            console.error(
+                findError
+            );
+
+            if (message) {
+
+                message.textContent =
+                    "读取旧记录失败：" +
+                    findError.message;
+
+            }
+
+            return;
+
+        }
+
+
+        let error = null;
+
+
+        if (existing) {
+
+            const result =
+                await supabaseClient
+                    .from("devotions")
+                    .update(data)
+                    .eq("id", existing.id);
+
+            error =
+                result.error;
+
+        } else {
+
+            const result =
+                await supabaseClient
+                    .from("devotions")
+                    .insert(data);
+
+            error =
+                result.error;
+
+        }
+
+
+        if (error) {
+
+            console.error(
+                "保存失败：",
+                error
+            );
+
+            if (message) {
+
+                message.textContent =
+                    "保存失败：" +
+                    error.message;
+
+            }
+
+            return;
+
+        }
+
+
+        if (message) {
+
+            message.textContent =
+                "✓ 今天的灵修已经保存。";
+
+        }
+
+
+        await loadHistory();
+
+        await renderCalendar();
+
+    }
+
+
+    /* =========================
+       日历
+    ========================= */
+
+    async function renderCalendar() {
+
+        const calendarTitle =
+            document.getElementById(
+                "calendarTitle"
+            );
+
+        const calendarDays =
+            document.getElementById(
+                "calendarDays"
+            );
+
+
+        if (
+            !calendarTitle ||
+            !calendarDays
+        ) {
+
+            return;
+
+        }
+
+
+        calendarTitle.textContent =
+            `${calendarYear}年${calendarMonth + 1}月`;
+
+
+        calendarDays.innerHTML =
+            "";
+
+
+        const firstDay =
+            new Date(
+                calendarYear,
+                calendarMonth,
+                1
+            );
+
+
+        const lastDay =
+            new Date(
+                calendarYear,
+                calendarMonth + 1,
+                0
+            );
+
+
+        const startWeekday =
+            firstDay.getDay();
+
+
+        const daysInMonth =
+            lastDay.getDate();
+
+
+        /*
+         * 获取这个月已有记录的日期
+         */
+
+        let recordDates =
+            new Set();
+
+
+        const {
+            data: userData
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        if (userData.user) {
+
+            const firstDate =
+                `${calendarYear}-${String(
+                    calendarMonth + 1
+                ).padStart(2, "0")}-01`;
+
+
+            const lastDate =
+                `${calendarYear}-${String(
+                    calendarMonth + 1
+                ).padStart(2, "0")}-${String(
+                    daysInMonth
+                ).padStart(2, "0")`;
+
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("devotions")
+                    .select("date")
+                    .eq(
+                        "user_id",
+                        userData.user.id
+                    )
+                    .gte(
+                        "date",
+                        firstDate
+                    )
+                    .lte(
+                        "date",
+                        lastDate
+                    );
+
+
+            if (!error && data) {
+
+                data.forEach(
+                    function (item) {
+
+                        recordDates.add(
+                            item.date
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+
+
+        /*
+         * 上个月最后几天
+         */
+
+        for (
+            let i = startWeekday - 1;
+            i >= 0;
+            i--
+        ) {
+
+            const day =
+                new Date(
+                    calendarYear,
+                    calendarMonth,
+                    -i
+                );
+
+
+            createCalendarDay(
+                day,
+                true,
+                recordDates,
+                calendarDays
+            );
+
+        }
+
+
+        /*
+         * 本月
+         */
+
+        for (
+            let dayNumber = 1;
+            dayNumber <= daysInMonth;
+            dayNumber++
+        ) {
+
+            const day =
+                new Date(
+                    calendarYear,
+                    calendarMonth,
+                    dayNumber
+                );
+
+
+            createCalendarDay(
+                day,
+                false,
+                recordDates,
+                calendarDays
+            );
+
+        }
+
+
+        /*
+         * 下个月前几天
+         */
+
+        const totalCells =
+            startWeekday +
+            daysInMonth;
+
+
+        const remaining =
+            totalCells % 7 === 0
+                ? 0
+                : 7 - (totalCells % 7);
+
+
+        for (
+            let i = 1;
+            i <= remaining;
+            i++
+        ) {
+
+            const day =
+                new Date(
+                    calendarYear,
+                    calendarMonth + 1,
+                    i
+                );
+
+
+            createCalendarDay(
+                day,
+                true,
+                recordDates,
+                calendarDays
+            );
+
+        }
+
+    }
+
+
+    /* =========================
+       创建日历日期
+    ========================= */
+
+    function createCalendarDay(
+        date,
+        otherMonth,
+        recordDates,
+        container
+    ) {
+
+        const dateString =
+            formatDate(date);
+
+
+        const wrapper =
+            document.createElement(
+                "div"
+            );
+
+
+        wrapper.className =
+            "calendar-day";
+
+
+        if (otherMonth) {
+
+            wrapper.classList.add(
+                "other-month"
+            );
+
+        }
+
+
+        if (
+            dateString ===
+            formatDate(new Date())
+        ) {
+
+            wrapper.classList.add(
+                "today"
+            );
+
+        }
+
+
+        if (
+            dateString ===
+            selectedDate
+        ) {
+
+            wrapper.classList.add(
+                "selected"
+            );
+
+        }
+
+
+        if (
+            recordDates.has(
+                dateString
+            )
+        ) {
+
+            wrapper.classList.add(
+                "has-record"
+            );
+
+        }
+
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.type =
+            "button";
+
+
+        button.textContent =
+            date.getDate();
+
+
+        button.addEventListener(
+            "click",
+            async function () {
+
+                await selectCalendarDate(
+                    dateString
+                );
+
+            }
+        );
+
+
+        wrapper.appendChild(
+            button
+        );
+
+
+        container.appendChild(
+            wrapper
+        );
+
+    }
+
+
+    /* =========================
+       点击日历日期
+    ========================= */
+
+    async function selectCalendarDate(
+        dateString
+    ) {
+
+        selectedDate =
+            dateString;
+
+
+        const selectedDateObject =
+            new Date(
+                Number(
+                    dateString.substring(
+                        0,
+                        4
+                    )
+                ),
+                Number(
+                    dateString.substring(
+                        5,
+                        7
+                    )
+                ) - 1,
+                Number(
+                    dateString.substring(
+                        8,
+                        10
+                    )
+                )
+            );
+
+
+        calendarYear =
+            selectedDateObject.getFullYear();
+
+
+        calendarMonth =
+            selectedDateObject.getMonth();
+
+
+        clearFields();
+
+
+        const data =
+            await getDevotionByDate(
+                selectedDate
+            );
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        if (data) {
+
+            fillFields(data);
+
+
+            if (message) {
+
+                message.textContent =
+                    "✓ 已打开 " +
+                    formatChineseDate(
+                        selectedDate
+                    ) +
+                    " 的灵修记录。";
+
+            }
+
+        } else {
+
+            if (message) {
+
+                message.textContent =
+                    formatChineseDate(
+                        selectedDate
+                    ) +
+                    " 还没有灵修记录。";
+
+            }
+
+        }
+
+
+        const todayElement =
+            document.getElementById(
+                "today"
+            );
+
+
+        if (todayElement) {
+
+            todayElement.textContent =
+                formatChineseDate(
+                    selectedDate
+                );
+
+        }
+
+
+        await renderCalendar();
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
         });
 
     }
 
 
+    /* =========================
+       上个月
+    ========================= */
 
-    /* ==================================================
-       从 Supabase 读取今天的灵修
-    ================================================== */
+    document
+        .getElementById("prevMonth")
+        .addEventListener(
+            "click",
+            async function () {
 
-    async function loadTodayData() {
+                calendarMonth--;
 
-        if (!currentUser) {
-            return;
-        }
+                if (
+                    calendarMonth < 0
+                ) {
 
+                    calendarMonth = 11;
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .from("devotions")
-                .select("*")
-                .eq(
-                    "user_id",
-                    currentUser.id
-                )
-                .eq(
-                    "date",
-                    todayKey
-                )
-                .maybeSingle();
-
-
-        if (error) {
-
-            console.error(
-                "读取今天灵修失败：",
-                error
-            );
-
-            showMessage(
-                "读取今天的灵修失败。"
-            );
-
-            return;
-
-        }
-
-
-        if (data) {
-
-            fillForm(data);
-
-            showMessage(
-                "已读取今天的灵修。"
-            );
-
-        } else {
-
-            clearForm();
-
-            showMessage("");
-
-        }
-
-    }
-
-
-
-    /* ==================================================
-       保存今天的灵修
-    ================================================== */
-
-    async function saveTodayData() {
-
-        if (!currentUser) {
-
-            showMessage(
-                "请先登录，再保存灵修。"
-            );
-
-            return;
-
-        }
-
-
-        if (saveButton) {
-
-            saveButton.disabled =
-                true;
-
-            saveButton.textContent =
-                "正在保存……";
-
-        }
-
-
-        const formData =
-            getFormData();
-
-
-        try {
-
-
-            /*
-             * 先检查今天是否已经存在记录
-             */
-
-            const {
-                data: existing,
-                error: findError
-            } =
-                await supabaseClient
-                    .from("devotions")
-                    .select("id")
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    )
-                    .eq(
-                        "date",
-                        todayKey
-                    )
-                    .maybeSingle();
-
-
-            if (findError) {
-
-                throw findError;
-
-            }
-
-
-
-            /*
-             * 如果存在，就更新
-             */
-
-            if (existing) {
-
-
-                const {
-                    error: updateError
-                } =
-                    await supabaseClient
-                        .from("devotions")
-                        .update({
-
-                            bible_reference:
-                                formData.bibleReference,
-
-                            bible_text:
-                                formData.bibleText,
-
-                            reflection:
-                                formData.reflection,
-
-                            response:
-                                formData.response,
-
-                            prayer:
-                                formData.prayer,
-
-                            learning:
-                                formData.learning
-
-                        })
-                        .eq(
-                            "id",
-                            existing.id
-                        );
-
-
-                if (updateError) {
-
-                    throw updateError;
+                    calendarYear--;
 
                 }
 
+                await renderCalendar();
 
-            } else {
-
-
-                /*
-                 * 如果不存在，就新建
-                 */
-
-                const {
-                    error: insertError
-                } =
-                    await supabaseClient
-                        .from("devotions")
-                        .insert({
-
-                            user_id:
-                                currentUser.id,
-
-                            date:
-                                todayKey,
-
-                            bible_reference:
-                                formData.bibleReference,
-
-                            bible_text:
-                                formData.bibleText,
-
-                            reflection:
-                                formData.reflection,
-
-                            response:
-                                formData.response,
-
-                            prayer:
-                                formData.prayer,
-
-                            learning:
-                                formData.learning
-
-                        });
+            }
+        );
 
 
-                if (insertError) {
+    /* =========================
+       下个月
+    ========================= */
 
-                    throw insertError;
+    document
+        .getElementById("nextMonth")
+        .addEventListener(
+            "click",
+            async function () {
+
+                calendarMonth++;
+
+                if (
+                    calendarMonth > 11
+                ) {
+
+                    calendarMonth = 0;
+
+                    calendarYear++;
 
                 }
 
-            }
-
-
-
-            showMessage(
-                "✓ 今天的灵修已经保存到云端。"
-            );
-
-
-            await loadHistory();
-
-            renderCalendar();
-
-
-        } catch (error) {
-
-            console.error(
-                "保存灵修失败：",
-                error
-            );
-
-
-            showMessage(
-                "保存失败：" +
-                (
-                    error.message ||
-                    "请检查 Supabase 设置。"
-                )
-            );
-
-
-        } finally {
-
-
-            if (saveButton) {
-
-                saveButton.disabled =
-                    false;
-
-                saveButton.textContent =
-                    "保存今天的灵修";
+                await renderCalendar();
 
             }
-
-        }
-
-    }
-
-
-
-    /* ==================================================
-       注册
-    ================================================== */
-
-    async function signUp() {
-
-        const email =
-            emailInput
-                ? emailInput.value.trim()
-                : "";
-
-
-        const password =
-            passwordInput
-                ? passwordInput.value
-                : "";
-
-
-        if (!email || !password) {
-
-            showAuthMessage(
-                "请输入邮箱和密码。"
-            );
-
-            return;
-
-        }
-
-
-        if (password.length < 6) {
-
-            showAuthMessage(
-                "密码至少需要 6 位。"
-            );
-
-            return;
-
-        }
-
-
-        signUpButton.disabled =
-            true;
-
-
-        showAuthMessage(
-            "正在注册……"
         );
 
 
-        try {
-
-
-            const {
-                data,
-                error
-            } =
-                await supabaseClient
-                    .auth
-                    .signUp({
-
-                        email:
-                            email,
-
-                        password:
-                            password,
-
-                        options: {
-
-                            emailRedirectTo:
-                                "https://jinxinglingri-prog.github.io/my-devotion/"
-
-                        }
-
-                    });
-
-
-            if (error) {
-
-                throw error;
-
-            }
-
-
-            if (
-                data.user &&
-                !data.session
-            ) {
-
-                showAuthMessage(
-                    "注册成功！请打开邮箱，点击确认链接，然后回来登录。"
-                );
-
-            } else {
-
-                showAuthMessage(
-                    "注册成功，已经登录。"
-                );
-
-            }
-
-
-        } catch (error) {
-
-            console.error(
-                "注册失败：",
-                error
-            );
-
-
-            showAuthMessage(
-                "注册失败：" +
-                (
-                    error.message ||
-                    "请稍后再试。"
-                )
-            );
-
-        } finally {
-
-            signUpButton.disabled =
-                false;
-
-        }
-
-    }
-
-
-
-    /* ==================================================
-       登录
-    ================================================== */
-
-    async function signIn() {
-
-        const email =
-            emailInput
-                ? emailInput.value.trim()
-                : "";
-
-
-        const password =
-            passwordInput
-                ? passwordInput.value
-                : "";
-
-
-        if (!email || !password) {
-
-            showAuthMessage(
-                "请输入邮箱和密码。"
-            );
-
-            return;
-
-        }
-
-
-        signInButton.disabled =
-            true;
-
-
-        showAuthMessage(
-            "正在登录……"
-        );
-
-
-        try {
-
-
-            const {
-                data,
-                error
-            } =
-                await supabaseClient
-                    .auth
-                    .signInWithPassword({
-
-                        email:
-                            email,
-
-                        password:
-                            password
-
-                    });
-
-
-            if (error) {
-
-                throw error;
-
-            }
-
-
-            currentUser =
-                data.user;
-
-
-            showAuthMessage(
-                "登录成功。"
-            );
-
-
-            updateAuthUI();
-
-
-            await loadTodayData();
-
-            await loadHistory();
-
-            renderCalendar();
-
-
-        } catch (error) {
-
-            console.error(
-                "登录失败：",
-                error
-            );
-
-
-            showAuthMessage(
-                "登录失败：" +
-                (
-                    error.message ||
-                    "邮箱或密码可能不正确。"
-                )
-            );
-
-
-        } finally {
-
-            signInButton.disabled =
-                false;
-
-        }
-
-    }
-
-
-
-    /* ==================================================
-       登出
-    ================================================== */
-
-    async function signOut() {
-
-        const {
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-        if (error) {
-
-            console.error(
-                "退出登录失败：",
-                error
-            );
-
-            return;
-
-        }
-
-
-        currentUser =
-            null;
-
-
-        clearForm();
-
-        updateAuthUI();
-
-        renderEmptyHistory();
-
-        renderCalendar();
-
-        showMessage("");
-
-        showAuthMessage(
-            "已经退出登录。"
-        );
-
-    }
-
-
-
-    /* ==================================================
-       读取所有历史记录
-    ================================================== */
+    /* =========================
+       灵修历史
+    ========================= */
 
     async function loadHistory() {
 
-        if (!currentUser) {
+        const historyList =
+            document.getElementById(
+                "historyList"
+            );
 
-            renderEmptyHistory();
 
-            return [];
+        if (!historyList) {
+
+            return;
+
+        }
+
+
+        historyList.innerHTML =
+            "<p>正在读取灵修历史……</p>";
+
+
+        const {
+            data: userData
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        const user =
+            userData.user;
+
+
+        if (!user) {
+
+            historyList.innerHTML =
+                "<p>请先登录后查看灵修历史。</p>";
+
+            return;
 
         }
 
@@ -1061,10 +1306,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             await supabaseClient
                 .from("devotions")
                 .select("*")
-                .eq(
-                    "user_id",
-                    currentUser.id
-                )
+                .eq("user_id", user.id)
                 .order(
                     "date",
                     {
@@ -1076,543 +1318,156 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (error) {
 
             console.error(
-                "读取历史记录失败：",
+                "读取历史失败：",
                 error
             );
 
 
-            if (historyList) {
+            historyList.innerHTML =
+                "<p>读取灵修历史失败。</p>";
 
-                historyList.innerHTML =
-                    "<p class='no-history'>读取历史记录失败。</p>";
-
-            }
-
-
-            return [];
-
-        }
-
-
-        window.devotionRecords =
-            data || [];
-
-
-        renderHistory(
-            window.devotionRecords
-        );
-
-
-        return window.devotionRecords;
-
-    }
-
-
-
-    /* ==================================================
-       显示历史记录
-    ================================================== */
-
-    function renderHistory(records) {
-
-        if (!historyList) {
             return;
+
         }
 
 
         historyList.innerHTML =
             "";
 
-
-        if (!records || records.length === 0) {
-
-            renderEmptyHistory();
-
-            return;
-
-        }
-
-
-        records.forEach(function (record) {
-
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "history-item";
-
-
-            const dateElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            dateElement.className =
-                "history-date";
-
-
-            const dateObject =
-                new Date(
-                    record.date +
-                    "T12:00:00"
-                );
-
-
-            dateElement.textContent =
-                dateObject.toLocaleDateString(
-                    "zh-CN",
-                    {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        weekday: "long"
-                    }
-                );
-
-
-
-            const bibleElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            bibleElement.className =
-                "history-bible";
-
-
-            bibleElement.textContent =
-                record.bible_reference ||
-                "还没有填写经文";
-
-
-
-            const previewElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            previewElement.className =
-                "history-preview";
-
-
-            if (record.reflection) {
-
-                let preview =
-                    record.reflection
-                        .replace(
-                            /\s+/g,
-                            " "
-                        );
-
-
-                if (preview.length > 80) {
-
-                    preview =
-                        preview.substring(
-                            0,
-                            80
-                        ) +
-                        "……";
-
-                }
-
-
-                previewElement.textContent =
-                    preview;
-
-            } else {
-
-                previewElement.textContent =
-                    "还没有记录今天的领受";
-
-            }
-
-
-
-            item.appendChild(
-                dateElement
-            );
-
-
-            item.appendChild(
-                bibleElement
-            );
-
-
-            item.appendChild(
-                previewElement
-            );
-
-
-
-            item.addEventListener(
-                "click",
-                function () {
-
-                    loadHistoryRecord(
-                        record
-                    );
-
-                }
-            );
-
-
-            historyList.appendChild(
-                item
-            );
-
-        });
-
-    }
-
-
-
-    /* ==================================================
-       没有历史记录
-    ================================================== */
-
-    function renderEmptyHistory() {
-
-        if (!historyList) {
-            return;
-        }
-
-
-        historyList.innerHTML =
-            `
-            <p class="no-history">
-                登录后，你的灵修记录会显示在这里。
-            </p>
-            `;
-
-    }
-
-
-
-    /* ==================================================
-       打开历史记录
-    ================================================== */
-
-    function loadHistoryRecord(record) {
-
-        if (!record) {
-            return;
-        }
-
-
-        fillForm(record);
-
-
-        showMessage(
-            "✓ 已打开 " +
-            record.date +
-            " 的灵修记录。"
-        );
-
-
-        window.scrollTo({
-
-            top: 0,
-
-            behavior: "smooth"
-
-        });
-
-    }
-
-
-
-    /* ==================================================
-       日历
-    ================================================== */
-
-    function renderCalendar() {
 
         if (
-            !calendarGrid ||
-            !calendarTitle
+            !data ||
+            data.length === 0
         ) {
+
+            historyList.innerHTML =
+                "<p>还没有灵修记录。</p>";
 
             return;
 
         }
 
 
-        const year =
-            calendarDate.getFullYear();
+        data.forEach(
+            function (record) {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
 
 
-        const month =
-            calendarDate.getMonth();
+                item.className =
+                    "history-item";
 
 
-        calendarTitle.textContent =
-            `${year}年${month + 1}月`;
+                const dateElement =
+                    document.createElement(
+                        "div"
+                    );
 
 
-        calendarGrid.innerHTML =
-            "";
+                dateElement.className =
+                    "history-date";
 
 
-        const firstDay =
-            new Date(
-                year,
-                month,
-                1
-            ).getDay();
+                dateElement.textContent =
+                    formatChineseDate(
+                        record.date
+                    );
 
 
-        const daysInMonth =
-            new Date(
-                year,
-                month + 1,
-                0
-            ).getDate();
+                const bibleElement =
+                    document.createElement(
+                        "div"
+                    );
 
 
-        const daysInPreviousMonth =
-            new Date(
-                year,
-                month,
-                0
-            ).getDate();
+                bibleElement.className =
+                    "history-bible";
 
 
-        const records =
-            window.devotionRecords ||
-            [];
+                bibleElement.textContent =
+                    record.bible_reference ||
+                    "还没有填写经文";
 
 
-        const recordDates =
-            new Set(
-                records.map(
-                    function (record) {
-                        return record.date;
+                const previewElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                previewElement.className =
+                    "history-preview";
+
+
+                if (
+                    record.reflection
+                ) {
+
+                    let preview =
+                        record.reflection
+                            .replace(
+                                /\s+/g,
+                                " "
+                            );
+
+
+                    if (
+                        preview.length >
+                        100
+                    ) {
+
+                        preview =
+                            preview.substring(
+                                0,
+                                100
+                            ) +
+                            "……";
+
                     }
-                )
-            );
 
 
+                    previewElement.textContent =
+                        preview;
 
-        /*
-         * 上个月日期
-         */
+                } else {
 
-        for (
-            let i = firstDay - 1;
-            i >= 0;
-            i--
-        ) {
+                    previewElement.textContent =
+                        "还没有记录今天的领受";
 
-            const day =
-                daysInPreviousMonth -
-                i;
+                }
 
 
-            const cell =
-                createCalendarDay(
-                    day,
-                    true
+                item.appendChild(
+                    dateElement
+                );
+
+                item.appendChild(
+                    bibleElement
+                );
+
+                item.appendChild(
+                    previewElement
                 );
 
 
-            calendarGrid.appendChild(
-                cell
-            );
-
-        }
-
-
-
-        /*
-         * 本月日期
-         */
-
-        for (
-            let day = 1;
-            day <= daysInMonth;
-            day++
-        ) {
-
-
-            const dateKey =
-                `${year}-${String(
-                    month + 1
-                ).padStart(2, "0")}-${String(
-                    day
-                ).padStart(2, "0")}`;
-
-
-            const cell =
-                createCalendarDay(
-                    day,
-                    false
-                );
-
-
-            if (
-                dateKey === todayKey
-            ) {
-
-                cell.classList.add(
-                    "today"
-                );
-
-            }
-
-
-            if (
-                recordDates.has(
-                    dateKey
-                )
-            ) {
-
-                cell.classList.add(
-                    "has-record"
-                );
-
-
-                cell.addEventListener(
+                item.addEventListener(
                     "click",
-                    function () {
+                    async function () {
 
-                        const record =
-                            records.find(
-                                function (item) {
-                                    return (
-                                        item.date ===
-                                        dateKey
-                                    );
-                                }
-                            );
-
-
-                        if (record) {
-
-                            loadHistoryRecord(
-                                record
-                            );
-
-                        }
+                        await selectCalendarDate(
+                            record.date
+                        );
 
                     }
                 );
 
-            }
 
-
-            calendarGrid.appendChild(
-                cell
-            );
-
-        }
-
-
-
-        /*
-         * 下个月日期
-         */
-
-        const totalCells =
-            firstDay +
-            daysInMonth;
-
-
-        const remaining =
-            Math.ceil(
-                totalCells / 7
-            ) * 7 -
-            totalCells;
-
-
-        for (
-            let day = 1;
-            day <= remaining;
-            day++
-        ) {
-
-            const cell =
-                createCalendarDay(
-                    day,
-                    true
+                historyList.appendChild(
+                    item
                 );
-
-
-            calendarGrid.appendChild(
-                cell
-            );
-
-        }
-
-    }
-
-
-
-    /* ==================================================
-       创建日历日期
-    ================================================== */
-
-    function createCalendarDay(
-        day,
-        otherMonth
-    ) {
-
-        const cell =
-            document.createElement(
-                "button"
-            );
-
-
-        cell.type =
-            "button";
-
-
-        cell.className =
-            "calendar-day";
-
-
-        cell.textContent =
-            day;
-
-
-        if (otherMonth) {
-
-            cell.classList.add(
-                "other-month"
-            );
-
-        }
-
-
-        return cell;
-
-    }
-
-
-
-    /* ==================================================
-       上个月
-    ================================================== */
-
-    if (prevMonthButton) {
-
-        prevMonthButton.addEventListener(
-            "click",
-            function () {
-
-                calendarDate.setMonth(
-                    calendarDate.getMonth() - 1
-                );
-
-
-                renderCalendar();
 
             }
         );
@@ -1620,133 +1475,80 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
 
-
-    /* ==================================================
-       下个月
-    ================================================== */
-
-    if (nextMonthButton) {
-
-        nextMonthButton.addEventListener(
-            "click",
-            function () {
-
-                calendarDate.setMonth(
-                    calendarDate.getMonth() + 1
-                );
-
-
-                renderCalendar();
-
-            }
-        );
-
-    }
-
-
-
-    /* ==================================================
+    /* =========================
        按钮事件
-    ================================================== */
+    ========================= */
 
-    if (saveButton) {
-
-        saveButton.addEventListener(
-            "click",
-            saveTodayData
-        );
-
-    }
-
-
-    if (signUpButton) {
-
-        signUpButton.addEventListener(
+    document
+        .getElementById("signUpButton")
+        .addEventListener(
             "click",
             signUp
         );
 
-    }
 
-
-    if (signInButton) {
-
-        signInButton.addEventListener(
+    document
+        .getElementById("signInButton")
+        .addEventListener(
             "click",
             signIn
         );
 
-    }
 
-
-    if (signOutButton) {
-
-        signOutButton.addEventListener(
+    document
+        .getElementById("signOutButton")
+        .addEventListener(
             "click",
             signOut
         );
 
-    }
 
-
-
-    /* ==================================================
-       监听登录状态变化
-    ================================================== */
-
-    supabaseClient
-        .auth
-        .onAuthStateChange(
-            async function (
-                event,
-                session
-            ) {
-
-                currentUser =
-                    session
-                        ? session.user
-                        : null;
-
-
-                updateAuthUI();
-
-
-                if (currentUser) {
-
-                    await loadTodayData();
-
-                    await loadHistory();
-
-                    renderCalendar();
-
-                } else {
-
-                    clearForm();
-
-                    renderEmptyHistory();
-
-                    renderCalendar();
-
-                }
-
-            }
+    document
+        .getElementById("saveButton")
+        .addEventListener(
+            "click",
+            saveTodayData
         );
 
 
+    /* =========================
+       登录状态变化
+    ========================= */
 
-    /* ==================================================
-       初始化
-    ================================================== */
+    supabaseClient.auth.onAuthStateChange(
+        async function (
+            event,
+            session
+        ) {
 
-    window.devotionRecords =
-        [];
+            updateAuthUI(
+                session
+                    ? session.user
+                    : null
+            );
 
 
-    renderCalendar();
+            if (
+                session &&
+                session.user
+            ) {
 
-    updateAuthUI();
+                await loadTodayFromSupabase();
+
+                await loadHistory();
+
+                await renderCalendar();
+
+            }
+
+        }
+    );
 
 
-    await checkUser();
+    /* =========================
+       启动
+    ========================= */
+
+    checkUser();
 
 });
