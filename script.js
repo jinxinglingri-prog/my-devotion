@@ -1,4 +1,29 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+
+
+    /* ==================================================
+       Supabase 设置
+    ================================================== */
+
+    const SUPABASE_URL =
+        "https://asfqtznfhljxwfktuido.supabase.co";
+
+
+    const SUPABASE_KEY =
+        "sb_publishable_Vu7U10XTkqZaOPa-cj9BXQ_TKxgkEwy";
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+
+    /* ==================================================
+       灵修字段
+    ================================================== */
 
     const fields = [
         "bibleReference",
@@ -6,48 +31,52 @@ document.addEventListener("DOMContentLoaded", function () {
         "reflection",
         "response",
         "prayer",
-        "learning",
-        "tags"
+        "learning"
     ];
 
 
-    let calendarDate = new Date();
 
-    let viewingDate = null;
+    /* ==================================================
+       今天日期
+    ================================================== */
+
+    let currentDate =
+        new Date();
 
 
-    const today = new Date();
+    let calendarDate =
+        new Date();
 
 
-    const year =
-        today.getFullYear();
 
-    const month =
-        String(
-            today.getMonth() + 1
-        ).padStart(2, "0");
+    function getDateKey(date) {
 
-    const day =
-        String(
-            today.getDate()
-        ).padStart(2, "0");
+        const year =
+            date.getFullYear();
+
+        const month =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                date.getDate()
+            ).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    }
+
 
 
     const todayKey =
-        `${year}-${month}-${day}`;
+        getDateKey(currentDate);
 
 
-    const dateString =
-        today.toLocaleDateString(
-            "zh-CN",
-            {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                weekday: "long"
-            }
-        );
 
+    /* ==================================================
+       页面日期
+    ================================================== */
 
     const todayElement =
         document.getElementById("today");
@@ -56,693 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (todayElement) {
 
         todayElement.textContent =
-            dateString;
-
-    }
-
-
-
-    // =========================
-    // 获取所有记录
-    // =========================
-
-    function getRecords() {
-
-        const records = [];
-
-
-        for (
-            let i = 0;
-            i < localStorage.length;
-            i++
-        ) {
-
-            const key =
-                localStorage.key(i);
-
-
-            if (
-                !key ||
-                !key.startsWith("devotion-")
-            ) {
-
-                continue;
-
-            }
-
-
-            const date =
-                key.replace(
-                    "devotion-",
-                    ""
-                );
-
-
-            try {
-
-                const data =
-                    JSON.parse(
-                        localStorage.getItem(key)
-                    );
-
-
-                records.push({
-                    date: date,
-                    data: data
-                });
-
-
-            } catch (error) {
-
-                console.error(
-                    "读取记录失败：",
-                    error
-                );
-
-            }
-
-        }
-
-
-        records.sort(
-            function (a, b) {
-
-                return b.date.localeCompare(
-                    a.date
-                );
-
-            }
-        );
-
-
-        return records;
-
-    }
-
-
-
-    // =========================
-    // 清空输入框
-    // =========================
-
-    function clearFields() {
-
-        fields.forEach(
-            function (field) {
-
-                const element =
-                    document.getElementById(
-                        field
-                    );
-
-
-                if (element) {
-
-                    element.value = "";
-
-                }
-
-            }
-        );
-
-    }
-
-
-
-    // =========================
-    // 读取今天
-    // =========================
-
-    function loadTodayData() {
-
-        viewingDate = null;
-
-
-        clearFields();
-
-
-        const saved =
-            localStorage.getItem(
-                "devotion-" + todayKey
-            );
-
-
-        if (!saved) {
-
-            return;
-
-        }
-
-
-        try {
-
-            const data =
-                JSON.parse(saved);
-
-
-            fields.forEach(
-                function (field) {
-
-                    const element =
-                        document.getElementById(
-                            field
-                        );
-
-
-                    if (
-                        element &&
-                        data[field] !== undefined
-                    ) {
-
-                        element.value =
-                            data[field];
-
-                    }
-
-                }
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "读取今天的灵修失败：",
-                error
-            );
-
-        }
-
-    }
-
-
-
-    // =========================
-    // 保存今天
-    // =========================
-
-    function saveTodayData() {
-
-        if (viewingDate !== null) {
-
-            const message =
-                document.getElementById(
-                    "message"
-                );
-
-
-            if (message) {
-
-                message.textContent =
-                    "⚠️ 请先点击“返回今天”。";
-
-            }
-
-
-            return;
-
-        }
-
-
-        const data = {};
-
-
-        fields.forEach(
-            function (field) {
-
-                const element =
-                    document.getElementById(
-                        field
-                    );
-
-
-                if (element) {
-
-                    data[field] =
-                        element.value;
-
-                }
-
-            }
-        );
-
-
-        localStorage.setItem(
-            "devotion-" + todayKey,
-            JSON.stringify(data)
-        );
-
-
-        const message =
-            document.getElementById(
-                "message"
-            );
-
-
-        if (message) {
-
-            message.textContent =
-                "✓ 今天的灵修已经保存。";
-
-        }
-
-
-        renderCalendar();
-
-        renderTagFilters();
-
-        showHistory();
-
-        renderStats();
-
-    }
-
-
-
-    // =========================
-    // 标签
-    // =========================
-
-    function createTagsElement(tags) {
-
-        const container =
-            document.createElement(
-                "div"
-            );
-
-
-        container.className =
-            "history-tags";
-
-
-        if (!tags) {
-
-            return container;
-
-        }
-
-
-        const tagArray =
-            tags
-                .split(",")
-                .map(
-                    function (tag) {
-
-                        return tag.trim();
-
-                    }
-                )
-                .filter(Boolean);
-
-
-        tagArray.forEach(
-            function (tag) {
-
-                const element =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                element.className =
-                    "tag";
-
-
-                element.textContent =
-                    "#" + tag;
-
-
-                container.appendChild(
-                    element
-                );
-
-            }
-        );
-
-
-        return container;
-
-    }
-
-
-
-    function getAllTags() {
-
-        const tags = new Set();
-
-
-        const records =
-            getRecords();
-
-
-        records.forEach(
-            function (record) {
-
-                if (!record.data.tags) {
-
-                    return;
-
-                }
-
-
-                record.data.tags
-                    .split(",")
-                    .map(
-                        function (tag) {
-
-                            return tag.trim();
-
-                        }
-                    )
-                    .filter(Boolean)
-                    .forEach(
-                        function (tag) {
-
-                            tags.add(tag);
-
-                        }
-                    );
-
-            }
-        );
-
-
-        return Array.from(tags).sort();
-
-    }
-
-
-
-    function renderTagFilters() {
-
-        const container =
-            document.getElementById(
-                "tagFilters"
-            );
-
-
-        if (!container) {
-
-            return;
-
-        }
-
-
-        container.innerHTML = "";
-
-
-        const allButton =
-            document.createElement(
-                "button"
-            );
-
-
-        allButton.type = "button";
-
-        allButton.className =
-            "tag-filter active";
-
-        allButton.textContent =
-            "全部";
-
-
-        allButton.addEventListener(
-            "click",
-            function () {
-
-                setActiveTagButton(
-                    allButton
-                );
-
-
-                showHistory();
-
-            }
-        );
-
-
-        container.appendChild(
-            allButton
-        );
-
-
-        getAllTags().forEach(
-            function (tag) {
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-
-                button.type = "button";
-
-                button.className =
-                    "tag-filter";
-
-                button.textContent =
-                    "#" + tag;
-
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        setActiveTagButton(
-                            button
-                        );
-
-
-                        showHistoryByTag(
-                            tag
-                        );
-
-                    }
-                );
-
-
-                container.appendChild(
-                    button
-                );
-
-            }
-        );
-
-    }
-
-
-
-    function setActiveTagButton(
-        activeButton
-    ) {
-
-        const buttons =
-            document.querySelectorAll(
-                ".tag-filter"
-            );
-
-
-        buttons.forEach(
-            function (button) {
-
-                button.classList.remove(
-                    "active"
-                );
-
-            }
-        );
-
-
-        activeButton.classList.add(
-            "active"
-        );
-
-    }
-
-
-
-    // =========================
-    // 历史记录
-    // =========================
-
-    function showHistory() {
-
-        const historyList =
-            document.getElementById(
-                "historyList"
-            );
-
-
-        if (!historyList) {
-
-            return;
-
-        }
-
-
-        historyList.innerHTML = "";
-
-
-        const records =
-            getRecords();
-
-
-        if (records.length === 0) {
-
-            historyList.innerHTML =
-                "<p>还没有灵修记录。</p>";
-
-
-            return;
-
-        }
-
-
-        records.forEach(
-            function (record) {
-
-                createHistoryItem(
-                    record.date,
-                    historyList
-                );
-
-            }
-        );
-
-    }
-
-
-
-    function showHistoryByTag(
-        selectedTag
-    ) {
-
-        const historyList =
-            document.getElementById(
-                "historyList"
-            );
-
-
-        if (!historyList) {
-
-            return;
-
-        }
-
-
-        historyList.innerHTML = "";
-
-
-        const records =
-            getRecords().filter(
-                function (record) {
-
-                    if (!record.data.tags) {
-
-                        return false;
-
-                    }
-
-
-                    const tags =
-                        record.data.tags
-                            .split(",")
-                            .map(
-                                function (tag) {
-
-                                    return tag.trim();
-
-                                }
-                            );
-
-
-                    return tags.includes(
-                        selectedTag
-                    );
-
-                }
-            );
-
-
-        if (records.length === 0) {
-
-            historyList.innerHTML =
-                "<p>还没有带有这个标签的灵修记录。</p>";
-
-
-            return;
-
-        }
-
-
-        records.forEach(
-            function (record) {
-
-                createHistoryItem(
-                    record.date,
-                    historyList
-                );
-
-            }
-        );
-
-    }
-
-
-
-    function createHistoryItem(
-        date,
-        container
-    ) {
-
-        const saved =
-            localStorage.getItem(
-                "devotion-" + date
-            );
-
-
-        let data = {};
-
-
-        try {
-
-            data = JSON.parse(saved);
-
-        } catch (error) {
-
-            data = {};
-
-        }
-
-
-        const item =
-            document.createElement(
-                "div"
-            );
-
-
-        item.className =
-            "history-item";
-
-
-        const dateElement =
-            document.createElement(
-                "div"
-            );
-
-
-        dateElement.className =
-            "history-date";
-
-
-        const dateObject =
-            new Date(
-                date +
-                "T12:00:00"
-            );
-
-
-        dateElement.textContent =
-            dateObject.toLocaleDateString(
+            currentDate.toLocaleDateString(
                 "zh-CN",
                 {
                     year: "numeric",
@@ -752,193 +95,207 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             );
 
-
-        const bibleElement =
-            document.createElement(
-                "div"
-            );
+    }
 
 
-        bibleElement.className =
-            "history-bible";
+
+    /* ==================================================
+       获取元素
+    ================================================== */
+
+    const saveButton =
+        document.getElementById(
+            "saveButton"
+        );
 
 
-        bibleElement.textContent =
-            data.bibleReference ||
-            "还没有填写经文";
+    const message =
+        document.getElementById(
+            "message"
+        );
 
 
-        const previewElement =
-            document.createElement(
-                "div"
-            );
+    const authStatus =
+        document.getElementById(
+            "authStatus"
+        );
 
 
-        previewElement.className =
-            "history-preview";
+    const authMessage =
+        document.getElementById(
+            "authMessage"
+        );
 
 
-        const previewSource =
-            data.reflection ||
-            data.prayer ||
-            "";
+    const authForm =
+        document.getElementById(
+            "authForm"
+        );
 
 
-        if (previewSource) {
-
-            let preview =
-                previewSource.replace(
-                    /\s+/g,
-                    " "
-                );
+    const loggedInArea =
+        document.getElementById(
+            "loggedInArea"
+        );
 
 
-            if (preview.length > 80) {
-
-                preview =
-                    preview.substring(
-                        0,
-                        80
-                    ) +
-                    "……";
-
-            }
+    const userEmail =
+        document.getElementById(
+            "userEmail"
+        );
 
 
-            previewElement.textContent =
-                preview;
+    const emailInput =
+        document.getElementById(
+            "email"
+        );
 
-        } else {
 
-            previewElement.textContent =
-                "还没有记录今天的领受";
+    const passwordInput =
+        document.getElementById(
+            "password"
+        );
+
+
+    const signUpButton =
+        document.getElementById(
+            "signUpButton"
+        );
+
+
+    const signInButton =
+        document.getElementById(
+            "signInButton"
+        );
+
+
+    const signOutButton =
+        document.getElementById(
+            "signOutButton"
+        );
+
+
+    const historyList =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    const calendarGrid =
+        document.getElementById(
+            "calendarGrid"
+        );
+
+
+    const calendarTitle =
+        document.getElementById(
+            "calendarTitle"
+        );
+
+
+    const prevMonthButton =
+        document.getElementById(
+            "prevMonthButton"
+        );
+
+
+    const nextMonthButton =
+        document.getElementById(
+            "nextMonthButton"
+        );
+
+
+
+    /* ==================================================
+       当前登录用户
+    ================================================== */
+
+    let currentUser = null;
+
+
+
+    /* ==================================================
+       设置消息
+    ================================================== */
+
+    function showMessage(text) {
+
+        if (message) {
+
+            message.textContent =
+                text;
 
         }
 
-
-        item.appendChild(
-            dateElement
-        );
+    }
 
 
-        item.appendChild(
-            bibleElement
-        );
+    function showAuthMessage(text) {
 
+        if (authMessage) {
 
-        item.appendChild(
-            previewElement
-        );
+            authMessage.textContent =
+                text;
 
-
-        item.appendChild(
-            createTagsElement(
-                data.tags
-            )
-        );
-
-
-        item.addEventListener(
-            "click",
-            function () {
-
-                loadHistoryRecord(
-                    date
-                );
-
-            }
-        );
-
-
-        container.appendChild(
-            item
-        );
+        }
 
     }
 
 
 
-    // =========================
-    // 打开历史记录
-    // =========================
+    /* ==================================================
+       读取当前登录状态
+    ================================================== */
 
-    function loadHistoryRecord(
-        date
-    ) {
+    async function checkUser() {
 
-        const saved =
-            localStorage.getItem(
-                "devotion-" + date
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .getUser();
+
+
+        if (error) {
+
+            console.error(
+                "获取用户失败：",
+                error
             );
 
+            currentUser = null;
 
-        if (!saved) {
+            updateAuthUI();
 
             return;
 
         }
 
 
-        try {
-
-            const data =
-                JSON.parse(saved);
+        currentUser =
+            data.user || null;
 
 
-            viewingDate = date;
+        updateAuthUI();
 
 
-            fields.forEach(
-                function (field) {
+        if (currentUser) {
 
-                    const element =
-                        document.getElementById(
-                            field
-                        );
+            await loadTodayData();
 
+            await loadHistory();
 
-                    if (
-                        element &&
-                        data[field] !== undefined
-                    ) {
+            renderCalendar();
 
-                        element.value =
-                            data[field];
+        } else {
 
-                    }
+            clearForm();
 
-                }
-            );
+            renderCalendar();
 
-
-            const message =
-                document.getElementById(
-                    "message"
-                );
-
-
-            if (message) {
-
-                message.textContent =
-                    "📖 正在查看 " +
-                    date +
-                    " 的灵修记录";
-
-            }
-
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-
-
-        } catch (error) {
-
-            console.error(
-                "读取历史失败：",
-                error
-            );
+            renderEmptyHistory();
 
         }
 
@@ -946,197 +303,1158 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // =========================
-    // 返回今天
-    // =========================
+    /* ==================================================
+       更新登录界面
+    ================================================== */
 
-    function returnToToday() {
+    function updateAuthUI() {
 
-        loadTodayData();
-
-
-        const message =
-            document.getElementById(
-                "message"
-            );
-
-
-        if (message) {
-
-            message.textContent =
-                "✨ 已返回今天。";
-
+        if (!authStatus) {
+            return;
         }
 
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
+        if (currentUser) {
+
+            authStatus.textContent =
+                "你的灵修已经连接到云端。";
+
+
+            if (userEmail) {
+
+                userEmail.textContent =
+                    currentUser.email || "";
+
+            }
+
+
+            if (authForm) {
+
+                authForm.classList.add(
+                    "hidden"
+                );
+
+            }
+
+
+            if (loggedInArea) {
+
+                loggedInArea.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+            if (saveButton) {
+
+                saveButton.disabled =
+                    false;
+
+            }
+
+        } else {
+
+            authStatus.textContent =
+                "请先注册或登录，才能保存云端灵修。";
+
+
+            if (authForm) {
+
+                authForm.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+            if (loggedInArea) {
+
+                loggedInArea.classList.add(
+                    "hidden"
+                );
+
+            }
+
+
+            if (saveButton) {
+
+                saveButton.disabled =
+                    true;
+
+            }
+
+        }
+
+    }
+
+
+
+    /* ==================================================
+       清空表单
+    ================================================== */
+
+    function clearForm() {
+
+        fields.forEach(function (field) {
+
+            const element =
+                document.getElementById(
+                    field
+                );
+
+            if (element) {
+
+                element.value =
+                    "";
+
+            }
+
         });
 
     }
 
 
 
-    // =========================
-    // 日历
-    // =========================
+    /* ==================================================
+       获取表单数据
+    ================================================== */
 
-    function renderCalendar() {
+    function getFormData() {
 
-        const calendar =
-            document.getElementById(
-                "calendar"
+        const data = {};
+
+
+        fields.forEach(function (field) {
+
+            const element =
+                document.getElementById(
+                    field
+                );
+
+
+            data[field] =
+                element
+                    ? element.value
+                    : "";
+
+        });
+
+
+        return data;
+
+    }
+
+
+
+    /* ==================================================
+       把数据库字段转换成表单数据
+    ================================================== */
+
+    function fillForm(data) {
+
+        fields.forEach(function (field) {
+
+            const element =
+                document.getElementById(
+                    field
+                );
+
+
+            if (
+                element &&
+                data &&
+                data[field] !== undefined
+            ) {
+
+                element.value =
+                    data[field] || "";
+
+            }
+
+        });
+
+    }
+
+
+
+    /* ==================================================
+       从 Supabase 读取今天的灵修
+    ================================================== */
+
+    async function loadTodayData() {
+
+        if (!currentUser) {
+            return;
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("devotions")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .eq(
+                    "date",
+                    todayKey
+                )
+                .maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "读取今天灵修失败：",
+                error
             );
 
-
-        const title =
-            document.getElementById(
-                "calendarTitle"
+            showMessage(
+                "读取今天的灵修失败。"
             );
-
-
-        if (!calendar || !title) {
 
             return;
 
         }
 
 
-        calendar.innerHTML = "";
+        if (data) {
+
+            fillForm(data);
+
+            showMessage(
+                "已读取今天的灵修。"
+            );
+
+        } else {
+
+            clearForm();
+
+            showMessage("");
+
+        }
+
+    }
 
 
-        const calendarYear =
+
+    /* ==================================================
+       保存今天的灵修
+    ================================================== */
+
+    async function saveTodayData() {
+
+        if (!currentUser) {
+
+            showMessage(
+                "请先登录，再保存灵修。"
+            );
+
+            return;
+
+        }
+
+
+        if (saveButton) {
+
+            saveButton.disabled =
+                true;
+
+            saveButton.textContent =
+                "正在保存……";
+
+        }
+
+
+        const formData =
+            getFormData();
+
+
+        try {
+
+
+            /*
+             * 先检查今天是否已经存在记录
+             */
+
+            const {
+                data: existing,
+                error: findError
+            } =
+                await supabaseClient
+                    .from("devotions")
+                    .select("id")
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    )
+                    .eq(
+                        "date",
+                        todayKey
+                    )
+                    .maybeSingle();
+
+
+            if (findError) {
+
+                throw findError;
+
+            }
+
+
+
+            /*
+             * 如果存在，就更新
+             */
+
+            if (existing) {
+
+
+                const {
+                    error: updateError
+                } =
+                    await supabaseClient
+                        .from("devotions")
+                        .update({
+
+                            bible_reference:
+                                formData.bibleReference,
+
+                            bible_text:
+                                formData.bibleText,
+
+                            reflection:
+                                formData.reflection,
+
+                            response:
+                                formData.response,
+
+                            prayer:
+                                formData.prayer,
+
+                            learning:
+                                formData.learning
+
+                        })
+                        .eq(
+                            "id",
+                            existing.id
+                        );
+
+
+                if (updateError) {
+
+                    throw updateError;
+
+                }
+
+
+            } else {
+
+
+                /*
+                 * 如果不存在，就新建
+                 */
+
+                const {
+                    error: insertError
+                } =
+                    await supabaseClient
+                        .from("devotions")
+                        .insert({
+
+                            user_id:
+                                currentUser.id,
+
+                            date:
+                                todayKey,
+
+                            bible_reference:
+                                formData.bibleReference,
+
+                            bible_text:
+                                formData.bibleText,
+
+                            reflection:
+                                formData.reflection,
+
+                            response:
+                                formData.response,
+
+                            prayer:
+                                formData.prayer,
+
+                            learning:
+                                formData.learning
+
+                        });
+
+
+                if (insertError) {
+
+                    throw insertError;
+
+                }
+
+            }
+
+
+
+            showMessage(
+                "✓ 今天的灵修已经保存到云端。"
+            );
+
+
+            await loadHistory();
+
+            renderCalendar();
+
+
+        } catch (error) {
+
+            console.error(
+                "保存灵修失败：",
+                error
+            );
+
+
+            showMessage(
+                "保存失败：" +
+                (
+                    error.message ||
+                    "请检查 Supabase 设置。"
+                )
+            );
+
+
+        } finally {
+
+
+            if (saveButton) {
+
+                saveButton.disabled =
+                    false;
+
+                saveButton.textContent =
+                    "保存今天的灵修";
+
+            }
+
+        }
+
+    }
+
+
+
+    /* ==================================================
+       注册
+    ================================================== */
+
+    async function signUp() {
+
+        const email =
+            emailInput
+                ? emailInput.value.trim()
+                : "";
+
+
+        const password =
+            passwordInput
+                ? passwordInput.value
+                : "";
+
+
+        if (!email || !password) {
+
+            showAuthMessage(
+                "请输入邮箱和密码。"
+            );
+
+            return;
+
+        }
+
+
+        if (password.length < 6) {
+
+            showAuthMessage(
+                "密码至少需要 6 位。"
+            );
+
+            return;
+
+        }
+
+
+        signUpButton.disabled =
+            true;
+
+
+        showAuthMessage(
+            "正在注册……"
+        );
+
+
+        try {
+
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .auth
+                    .signUp({
+
+                        email:
+                            email,
+
+                        password:
+                            password,
+
+                        options: {
+
+                            emailRedirectTo:
+                                "https://jinxinglingri-prog.github.io/my-devotion/"
+
+                        }
+
+                    });
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            if (
+                data.user &&
+                !data.session
+            ) {
+
+                showAuthMessage(
+                    "注册成功！请打开邮箱，点击确认链接，然后回来登录。"
+                );
+
+            } else {
+
+                showAuthMessage(
+                    "注册成功，已经登录。"
+                );
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "注册失败：",
+                error
+            );
+
+
+            showAuthMessage(
+                "注册失败：" +
+                (
+                    error.message ||
+                    "请稍后再试。"
+                )
+            );
+
+        } finally {
+
+            signUpButton.disabled =
+                false;
+
+        }
+
+    }
+
+
+
+    /* ==================================================
+       登录
+    ================================================== */
+
+    async function signIn() {
+
+        const email =
+            emailInput
+                ? emailInput.value.trim()
+                : "";
+
+
+        const password =
+            passwordInput
+                ? passwordInput.value
+                : "";
+
+
+        if (!email || !password) {
+
+            showAuthMessage(
+                "请输入邮箱和密码。"
+            );
+
+            return;
+
+        }
+
+
+        signInButton.disabled =
+            true;
+
+
+        showAuthMessage(
+            "正在登录……"
+        );
+
+
+        try {
+
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .auth
+                    .signInWithPassword({
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
+                    });
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            currentUser =
+                data.user;
+
+
+            showAuthMessage(
+                "登录成功。"
+            );
+
+
+            updateAuthUI();
+
+
+            await loadTodayData();
+
+            await loadHistory();
+
+            renderCalendar();
+
+
+        } catch (error) {
+
+            console.error(
+                "登录失败：",
+                error
+            );
+
+
+            showAuthMessage(
+                "登录失败：" +
+                (
+                    error.message ||
+                    "邮箱或密码可能不正确。"
+                )
+            );
+
+
+        } finally {
+
+            signInButton.disabled =
+                false;
+
+        }
+
+    }
+
+
+
+    /* ==================================================
+       登出
+    ================================================== */
+
+    async function signOut() {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+        if (error) {
+
+            console.error(
+                "退出登录失败：",
+                error
+            );
+
+            return;
+
+        }
+
+
+        currentUser =
+            null;
+
+
+        clearForm();
+
+        updateAuthUI();
+
+        renderEmptyHistory();
+
+        renderCalendar();
+
+        showMessage("");
+
+        showAuthMessage(
+            "已经退出登录。"
+        );
+
+    }
+
+
+
+    /* ==================================================
+       读取所有历史记录
+    ================================================== */
+
+    async function loadHistory() {
+
+        if (!currentUser) {
+
+            renderEmptyHistory();
+
+            return [];
+
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("devotions")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "date",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "读取历史记录失败：",
+                error
+            );
+
+
+            if (historyList) {
+
+                historyList.innerHTML =
+                    "<p class='no-history'>读取历史记录失败。</p>";
+
+            }
+
+
+            return [];
+
+        }
+
+
+        window.devotionRecords =
+            data || [];
+
+
+        renderHistory(
+            window.devotionRecords
+        );
+
+
+        return window.devotionRecords;
+
+    }
+
+
+
+    /* ==================================================
+       显示历史记录
+    ================================================== */
+
+    function renderHistory(records) {
+
+        if (!historyList) {
+            return;
+        }
+
+
+        historyList.innerHTML =
+            "";
+
+
+        if (!records || records.length === 0) {
+
+            renderEmptyHistory();
+
+            return;
+
+        }
+
+
+        records.forEach(function (record) {
+
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "history-item";
+
+
+            const dateElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            dateElement.className =
+                "history-date";
+
+
+            const dateObject =
+                new Date(
+                    record.date +
+                    "T12:00:00"
+                );
+
+
+            dateElement.textContent =
+                dateObject.toLocaleDateString(
+                    "zh-CN",
+                    {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        weekday: "long"
+                    }
+                );
+
+
+
+            const bibleElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            bibleElement.className =
+                "history-bible";
+
+
+            bibleElement.textContent =
+                record.bible_reference ||
+                "还没有填写经文";
+
+
+
+            const previewElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            previewElement.className =
+                "history-preview";
+
+
+            if (record.reflection) {
+
+                let preview =
+                    record.reflection
+                        .replace(
+                            /\s+/g,
+                            " "
+                        );
+
+
+                if (preview.length > 80) {
+
+                    preview =
+                        preview.substring(
+                            0,
+                            80
+                        ) +
+                        "……";
+
+                }
+
+
+                previewElement.textContent =
+                    preview;
+
+            } else {
+
+                previewElement.textContent =
+                    "还没有记录今天的领受";
+
+            }
+
+
+
+            item.appendChild(
+                dateElement
+            );
+
+
+            item.appendChild(
+                bibleElement
+            );
+
+
+            item.appendChild(
+                previewElement
+            );
+
+
+
+            item.addEventListener(
+                "click",
+                function () {
+
+                    loadHistoryRecord(
+                        record
+                    );
+
+                }
+            );
+
+
+            historyList.appendChild(
+                item
+            );
+
+        });
+
+    }
+
+
+
+    /* ==================================================
+       没有历史记录
+    ================================================== */
+
+    function renderEmptyHistory() {
+
+        if (!historyList) {
+            return;
+        }
+
+
+        historyList.innerHTML =
+            `
+            <p class="no-history">
+                登录后，你的灵修记录会显示在这里。
+            </p>
+            `;
+
+    }
+
+
+
+    /* ==================================================
+       打开历史记录
+    ================================================== */
+
+    function loadHistoryRecord(record) {
+
+        if (!record) {
+            return;
+        }
+
+
+        fillForm(record);
+
+
+        showMessage(
+            "✓ 已打开 " +
+            record.date +
+            " 的灵修记录。"
+        );
+
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    }
+
+
+
+    /* ==================================================
+       日历
+    ================================================== */
+
+    function renderCalendar() {
+
+        if (
+            !calendarGrid ||
+            !calendarTitle
+        ) {
+
+            return;
+
+        }
+
+
+        const year =
             calendarDate.getFullYear();
 
 
-        const calendarMonth =
+        const month =
             calendarDate.getMonth();
 
 
-        title.textContent =
-            `${calendarYear}年${calendarMonth + 1}月`;
+        calendarTitle.textContent =
+            `${year}年${month + 1}月`;
+
+
+        calendarGrid.innerHTML =
+            "";
 
 
         const firstDay =
             new Date(
-                calendarYear,
-                calendarMonth,
+                year,
+                month,
                 1
-            );
+            ).getDay();
 
 
-        const lastDay =
+        const daysInMonth =
             new Date(
-                calendarYear,
-                calendarMonth + 1,
+                year,
+                month + 1,
                 0
+            ).getDate();
+
+
+        const daysInPreviousMonth =
+            new Date(
+                year,
+                month,
+                0
+            ).getDate();
+
+
+        const records =
+            window.devotionRecords ||
+            [];
+
+
+        const recordDates =
+            new Set(
+                records.map(
+                    function (record) {
+                        return record.date;
+                    }
+                )
             );
 
 
-        let startDay =
-            firstDay.getDay();
 
-
-        if (startDay === 0) {
-
-            startDay = 7;
-
-        }
-
+        /*
+         * 上个月日期
+         */
 
         for (
-            let i = 1;
-            i < startDay;
-            i++
+            let i = firstDay - 1;
+            i >= 0;
+            i--
         ) {
 
-            const empty =
-                document.createElement(
-                    "div"
+            const day =
+                daysInPreviousMonth -
+                i;
+
+
+            const cell =
+                createCalendarDay(
+                    day,
+                    true
                 );
 
 
-            empty.className =
-                "calendar-day empty";
-
-
-            calendar.appendChild(
-                empty
+            calendarGrid.appendChild(
+                cell
             );
 
         }
 
+
+
+        /*
+         * 本月日期
+         */
 
         for (
             let day = 1;
-            day <= lastDay.getDate();
+            day <= daysInMonth;
             day++
         ) {
 
-            const cell =
-                document.createElement(
-                    "div"
-                );
-
-
-            cell.className =
-                "calendar-day";
-
 
             const dateKey =
-                `${calendarYear}-${String(
-                    calendarMonth + 1
+                `${year}-${String(
+                    month + 1
                 ).padStart(2, "0")}-${String(
                     day
                 ).padStart(2, "0")}`;
 
 
-            const number =
-                document.createElement(
-                    "span"
+            const cell =
+                createCalendarDay(
+                    day,
+                    false
                 );
-
-
-            number.className =
-                "calendar-number";
-
-
-            number.textContent =
-                day;
-
-
-            cell.appendChild(
-                number
-            );
-
-
-            if (
-                localStorage.getItem(
-                    "devotion-" +
-                    dateKey
-                )
-            ) {
-
-                const dot =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                dot.className =
-                    "calendar-dot";
-
-
-                dot.textContent =
-                    "●";
-
-
-                cell.appendChild(
-                    dot
-                );
-
-            }
 
 
             if (
@@ -1150,43 +1468,84 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            cell.addEventListener(
-                "click",
-                function () {
+            if (
+                recordDates.has(
+                    dateKey
+                )
+            ) {
 
-                    if (
-                        localStorage.getItem(
-                            "devotion-" +
-                            dateKey
-                        )
-                    ) {
+                cell.classList.add(
+                    "has-record"
+                );
 
-                        loadHistoryRecord(
-                            dateKey
-                        );
 
-                    } else {
+                cell.addEventListener(
+                    "click",
+                    function () {
 
-                        const message =
-                            document.getElementById(
-                                "message"
+                        const record =
+                            records.find(
+                                function (item) {
+                                    return (
+                                        item.date ===
+                                        dateKey
+                                    );
+                                }
                             );
 
 
-                        if (message) {
+                        if (record) {
 
-                            message.textContent =
-                                "这一天还没有灵修记录。";
+                            loadHistoryRecord(
+                                record
+                            );
 
                         }
 
                     }
+                );
 
-                }
+            }
+
+
+            calendarGrid.appendChild(
+                cell
             );
 
+        }
 
-            calendar.appendChild(
+
+
+        /*
+         * 下个月日期
+         */
+
+        const totalCells =
+            firstDay +
+            daysInMonth;
+
+
+        const remaining =
+            Math.ceil(
+                totalCells / 7
+            ) * 7 -
+            totalCells;
+
+
+        for (
+            let day = 1;
+            day <= remaining;
+            day++
+        ) {
+
+            const cell =
+                createCalendarDay(
+                    day,
+                    true
+                );
+
+
+            calendarGrid.appendChild(
                 cell
             );
 
@@ -1196,1137 +1555,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // =========================
-    // 搜索
-    // =========================
-
-    function searchDevotions() {
-
-        const input =
-            document.getElementById(
-                "searchInput"
-            );
-
-
-        const results =
-            document.getElementById(
-                "searchResults"
-            );
-
-
-        const message =
-            document.getElementById(
-                "searchMessage"
-            );
-
-
-        if (!input || !results) {
-
-            return;
-
-        }
-
-
-        const keyword =
-            input.value
-                .trim()
-                .toLowerCase();
-
-
-        results.innerHTML = "";
-
-
-        if (message) {
-
-            message.textContent = "";
-
-        }
-
-
-        if (!keyword) {
-
-            if (message) {
-
-                message.textContent =
-                    "请输入想搜索的内容。";
-
-            }
-
-
-            return;
-
-        }
-
-
-        const records =
-            getRecords().filter(
-                function (record) {
-
-                    const data =
-                        record.data;
-
-
-                    const text =
-                        [
-                            data.bibleReference,
-                            data.bibleText,
-                            data.reflection,
-                            data.response,
-                            data.prayer,
-                            data.learning,
-                            data.tags
-                        ]
-                        .filter(Boolean)
-                        .join(" ")
-                        .toLowerCase();
-
-
-                    return text.includes(
-                        keyword
-                    );
-
-                }
-            );
-
-
-        if (records.length === 0) {
-
-            if (message) {
-
-                message.textContent =
-                    "没有找到相关的灵修记录。";
-
-            }
-
-
-            return;
-
-        }
-
-
-        if (message) {
-
-            message.textContent =
-                `找到 ${records.length} 条灵修记录。`;
-
-        }
-
-
-        records.forEach(
-            function (record) {
-
-                const item =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                item.className =
-                    "search-result-item";
-
-
-                const dateElement =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                dateElement.className =
-                    "search-result-date";
-
-
-                const dateObject =
-                    new Date(
-                        record.date +
-                        "T12:00:00"
-                    );
-
-
-                dateElement.textContent =
-                    dateObject.toLocaleDateString(
-                        "zh-CN",
-                        {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            weekday: "long"
-                        }
-                    );
-
-
-                const bibleElement =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                bibleElement.className =
-                    "search-result-bible";
-
-
-                bibleElement.textContent =
-                    record.data.bibleReference ||
-                    "没有填写经文";
-
-
-                const previewElement =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                previewElement.className =
-                    "search-result-preview";
-
-
-                const previewSource =
-                    record.data.reflection ||
-                    record.data.prayer ||
-                    record.data.learning ||
-                    "";
-
-
-                if (previewSource) {
-
-                    let preview =
-                        previewSource.replace(
-                            /\s+/g,
-                            " "
-                        );
-
-
-                    if (preview.length > 120) {
-
-                        preview =
-                            preview.substring(
-                                0,
-                                120
-                            ) +
-                            "……";
-
-                    }
-
-
-                    previewElement.textContent =
-                        preview;
-
-                } else {
-
-                    previewElement.textContent =
-                        "这篇灵修还没有文字内容。";
-
-                }
-
-
-                item.appendChild(
-                    dateElement
-                );
-
-
-                item.appendChild(
-                    bibleElement
-                );
-
-
-                item.appendChild(
-                    previewElement
-                );
-
-
-                item.appendChild(
-                    createTagsElement(
-                        record.data.tags
-                    )
-                );
-
-
-                item.addEventListener(
-                    "click",
-                    function () {
-
-                        loadHistoryRecord(
-                            record.date
-                        );
-
-                    }
-                );
-
-
-                results.appendChild(
-                    item
-                );
-
-            }
-        );
-
-    }
-
-
-
-    // =========================
-    // 获取连续天数
-    // =========================
-
-    function calculateCurrentStreak(
-        recordDates
+    /* ==================================================
+       创建日历日期
+    ================================================== */
+
+    function createCalendarDay(
+        day,
+        otherMonth
     ) {
 
-        let streak = 0;
+        const cell =
+            document.createElement(
+                "button"
+            );
 
 
-        let checkDate =
-            new Date();
+        cell.type =
+            "button";
 
 
-        while (true) {
-
-            const key =
-                formatDateKey(
-                    checkDate
-                );
+        cell.className =
+            "calendar-day";
 
 
-            if (
-                recordDates.has(key)
-            ) {
-
-                streak++;
+        cell.textContent =
+            day;
 
 
-                checkDate.setDate(
-                    checkDate.getDate() - 1
-                );
+        if (otherMonth) {
 
-            } else {
-
-                break;
-
-            }
+            cell.classList.add(
+                "other-month"
+            );
 
         }
 
 
-        return streak;
+        return cell;
 
     }
 
 
 
-    // =========================
-    // 获取最长连续
-    // =========================
+    /* ==================================================
+       上个月
+    ================================================== */
 
-    function calculateLongestStreak(
-        recordDates
-    ) {
+    if (prevMonthButton) {
 
-        if (
-            recordDates.size === 0
-        ) {
-
-            return 0;
-
-        }
-
-
-        const dates =
-            Array.from(
-                recordDates
-            ).sort();
-
-
-        let longest = 1;
-
-        let current = 1;
-
-
-        for (
-            let i = 1;
-            i < dates.length;
-            i++
-        ) {
-
-            const previous =
-                new Date(
-                    dates[i - 1] +
-                    "T12:00:00"
-                );
-
-
-            const currentDate =
-                new Date(
-                    dates[i] +
-                    "T12:00:00"
-                );
-
-
-            const difference =
-                (
-                    currentDate -
-                    previous
-                ) /
-                (
-                    1000 *
-                    60 *
-                    60 *
-                    24
-                );
-
-
-            if (
-                difference === 1
-            ) {
-
-                current++;
-
-
-                if (
-                    current >
-                    longest
-                ) {
-
-                    longest =
-                        current;
-
-                }
-
-            } else {
-
-                current = 1;
-
-            }
-
-        }
-
-
-        return longest;
-
-    }
-
-
-
-    // =========================
-    // 日期格式
-    // =========================
-
-    function formatDateKey(
-        date
-    ) {
-
-        const y =
-            date.getFullYear();
-
-
-        const m =
-            String(
-                date.getMonth() + 1
-            ).padStart(2, "0");
-
-
-        const d =
-            String(
-                date.getDate()
-            ).padStart(2, "0");
-
-
-        return `${y}-${m}-${d}`;
-
-    }
-
-
-
-    // =========================
-    // 获取最常读书卷
-    // =========================
-
-    function getBookName(
-        reference
-    ) {
-
-        if (!reference) {
-
-            return null;
-
-        }
-
-
-        let text =
-            reference.trim();
-
-
-        text =
-            text.replace(
-                /^[0-9]+\s*/,
-                ""
-            );
-
-
-        text =
-            text.replace(
-                /^[一二三四五六七八九十]+\s*/,
-                ""
-            );
-
-
-        const separators = [
-            " ",
-            "　",
-            ":",
-            "：",
-            ",",
-            "，",
-            "-",
-            "–",
-            "—"
-        ];
-
-
-        let result = text;
-
-
-        for (
-            let i = 0;
-            i < separators.length;
-            i++
-        ) {
-
-            const index =
-                result.indexOf(
-                    separators[i]
-                );
-
-
-            if (index > 0) {
-
-                result =
-                    result.substring(
-                        0,
-                        index
-                    );
-
-            }
-
-        }
-
-
-        return result.trim();
-
-    }
-
-
-
-    // =========================
-    // 我的灵修统计
-    // =========================
-
-    function renderStats() {
-
-        const records =
-            getRecords();
-
-
-        const totalDays =
-            records.length;
-
-
-        const recordDates =
-            new Set(
-                records.map(
-                    function (record) {
-
-                        return record.date;
-
-                    }
-                )
-            );
-
-
-        // 本月
-
-        const monthPrefix =
-            `${today.getFullYear()}-${String(
-                today.getMonth() + 1
-            ).padStart(2, "0")}`;
-
-
-        const monthDays =
-            records.filter(
-                function (record) {
-
-                    return record.date.startsWith(
-                        monthPrefix
-                    );
-
-                }
-            ).length;
-
-
-        // 当前连续
-
-        const streak =
-            calculateCurrentStreak(
-                recordDates
-            );
-
-
-        // 最长连续
-
-        const longest =
-            calculateLongestStreak(
-                recordDates
-            );
-
-
-        // 标签统计
-
-        const tagCount = {};
-
-
-        records.forEach(
-            function (record) {
-
-                if (!record.data.tags) {
-
-                    return;
-
-                }
-
-
-                record.data.tags
-                    .split(",")
-                    .map(
-                        function (tag) {
-
-                            return tag.trim();
-
-                        }
-                    )
-                    .filter(Boolean)
-                    .forEach(
-                        function (tag) {
-
-                            if (
-                                !tagCount[tag]
-                            ) {
-
-                                tagCount[tag] = 0;
-
-                            }
-
-
-                            tagCount[tag]++;
-
-                        }
-                    );
-
-            }
-        );
-
-
-        let topTag = "—";
-
-        let topTagCount = 0;
-
-
-        Object.keys(tagCount).forEach(
-            function (tag) {
-
-                if (
-                    tagCount[tag] >
-                    topTagCount
-                ) {
-
-                    topTagCount =
-                        tagCount[tag];
-
-                    topTag =
-                        tag;
-
-                }
-
-            }
-        );
-
-
-        // 书卷统计
-
-        const bookCount = {};
-
-
-        records.forEach(
-            function (record) {
-
-                const book =
-                    getBookName(
-                        record.data.bibleReference
-                    );
-
-
-                if (!book) {
-
-                    return;
-
-                }
-
-
-                if (!bookCount[book]) {
-
-                    bookCount[book] = 0;
-
-                }
-
-
-                bookCount[book]++;
-
-            }
-        );
-
-
-        let topBook = "—";
-
-        let topBookCount = 0;
-
-
-        Object.keys(bookCount).forEach(
-            function (book) {
-
-                if (
-                    bookCount[book] >
-                    topBookCount
-                ) {
-
-                    topBookCount =
-                        bookCount[book];
-
-                    topBook =
-                        book;
-
-                }
-
-            }
-        );
-
-
-        // 更新页面
-
-        const totalElement =
-            document.getElementById(
-                "totalDays"
-            );
-
-
-        const monthElement =
-            document.getElementById(
-                "monthDays"
-            );
-
-
-        const streakElement =
-            document.getElementById(
-                "streakDays"
-            );
-
-
-        const longestElement =
-            document.getElementById(
-                "longestStreak"
-            );
-
-
-        const topTagElement =
-            document.getElementById(
-                "topTag"
-            );
-
-
-        const topBookElement =
-            document.getElementById(
-                "topBook"
-            );
-
-
-        if (totalElement) {
-
-            totalElement.textContent =
-                totalDays;
-
-        }
-
-
-        if (monthElement) {
-
-            monthElement.textContent =
-                monthDays;
-
-        }
-
-
-        if (streakElement) {
-
-            streakElement.textContent =
-                streak;
-
-        }
-
-
-        if (longestElement) {
-
-            longestElement.textContent =
-                longest;
-
-        }
-
-
-        if (topTagElement) {
-
-            topTagElement.textContent =
-                topTag === "—"
-                    ? "—"
-                    : "#" + topTag;
-
-        }
-
-
-        if (topBookElement) {
-
-            topBookElement.textContent =
-                topBook;
-
-        }
-
-
-        // 本月完成率
-
-        const daysInMonth =
-            new Date(
-                today.getFullYear(),
-                today.getMonth() + 1,
-                0
-            ).getDate();
-
-
-        const currentDay =
-            today.getDate();
-
-
-        const progress =
-            Math.min(
-                100,
-                Math.round(
-                    (
-                        monthDays /
-                        currentDay
-                    ) *
-                    100
-                )
-            );
-
-
-        const progressBar =
-            document.getElementById(
-                "monthProgress"
-            );
-
-
-        if (progressBar) {
-
-            progressBar.style.width =
-                progress + "%";
-
-        }
-
-
-        const progressText =
-            document.getElementById(
-                "monthProgressText"
-            );
-
-
-        if (progressText) {
-
-            progressText.textContent =
-                `${monthDays} / ${currentDay} 天`;
-
-        }
-
-
-        // 说明文字
-
-        const statsMessage =
-            document.getElementById(
-                "statsMessage"
-            );
-
-
-        if (statsMessage) {
-
-            if (
-                totalDays === 0
-            ) {
-
-                statsMessage.textContent =
-                    "今天开始记录，让每一天都成为与你主同行的足迹。";
-
-            } else if (
-                streak >= 7
-            ) {
-
-                statsMessage.textContent =
-                    `已经连续灵修 ${streak} 天，继续在主里面忠心前行。`;
-
-            } else if (
-                longest >= 7
-            ) {
-
-                statsMessage.textContent =
-                    `你曾经连续灵修 ${longest} 天，愿这份坚持继续成为与你主同行的力量。`;
-
-            } else {
-
-                statsMessage.textContent =
-                    "每一天的记录，都会成为你与主同行的足迹。";
-
-            }
-
-        }
-
-
-        renderTrend();
-
-    }
-
-
-
-    // =========================
-    // 最近灵修趋势
-    // =========================
-
-    function renderTrend() {
-
-        const container =
-            document.getElementById(
-                "trendList"
-            );
-
-
-        if (!container) {
-
-            return;
-
-        }
-
-
-        container.innerHTML = "";
-
-
-        const records =
-            getRecords();
-
-
-        const countByMonth = {};
-
-
-        records.forEach(
-            function (record) {
-
-                const month =
-                    record.date.substring(
-                        0,
-                        7
-                    );
-
-
-                if (
-                    !countByMonth[month]
-                ) {
-
-                    countByMonth[month] = 0;
-
-                }
-
-
-                countByMonth[month]++;
-
-            }
-        );
-
-
-        const months = [];
-
-
-        const current =
-            new Date(
-                today.getFullYear(),
-                today.getMonth(),
-                1
-            );
-
-
-        for (
-            let i = 5;
-            i >= 0;
-            i--
-        ) {
-
-            const date =
-                new Date(
-                    current.getFullYear(),
-                    current.getMonth() - i,
-                    1
-                );
-
-
-            const key =
-                `${date.getFullYear()}-${String(
-                    date.getMonth() + 1
-                ).padStart(2, "0")}`;
-
-
-            months.push({
-                key: key,
-                label:
-                    `${date.getMonth() + 1}月`,
-                count:
-                    countByMonth[key] || 0
-            });
-
-        }
-
-
-        const maxCount =
-            Math.max(
-                1,
-                ...months.map(
-                    function (month) {
-                        return month.count;
-                    }
-                )
-            );
-
-
-        months.forEach(
-            function (month) {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "trend-row";
-
-
-                const label =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                label.className =
-                    "trend-label";
-
-
-                label.textContent =
-                    month.label;
-
-
-                const barArea =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                barArea.className =
-                    "trend-bar-area";
-
-
-                const bar =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                bar.className =
-                    "trend-bar";
-
-
-                const width =
-                    month.count === 0
-                        ? 0
-                        : Math.max(
-                            8,
-                            (
-                                month.count /
-                                maxCount
-                            ) *
-                            100
-                        );
-
-
-                bar.style.width =
-                    width + "%";
-
-
-                barArea.appendChild(
-                    bar
-                );
-
-
-                const count =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                count.className =
-                    "trend-count";
-
-
-                count.textContent =
-                    month.count +
-                    " 天";
-
-
-                row.appendChild(
-                    label
-                );
-
-
-                row.appendChild(
-                    barArea
-                );
-
-
-                row.appendChild(
-                    count
-                );
-
-
-                container.appendChild(
-                    row
-                );
-
-            }
-        );
-
-    }
-
-
-
-    // =========================
-    // 日历按钮
-    // =========================
-
-    const prevMonth =
-        document.getElementById(
-            "prevMonth"
-        );
-
-
-    if (prevMonth) {
-
-        prevMonth.addEventListener(
+        prevMonthButton.addEventListener(
             "click",
             function () {
 
@@ -2343,15 +1620,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    const nextMonth =
-        document.getElementById(
-            "nextMonth"
-        );
 
+    /* ==================================================
+       下个月
+    ================================================== */
 
-    if (nextMonth) {
+    if (nextMonthButton) {
 
-        nextMonth.addEventListener(
+        nextMonthButton.addEventListener(
             "click",
             function () {
 
@@ -2369,15 +1645,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // =========================
-    // 按钮
-    // =========================
-
-    const saveButton =
-        document.getElementById(
-            "saveButton"
-        );
-
+    /* ==================================================
+       按钮事件
+    ================================================== */
 
     if (saveButton) {
 
@@ -2389,93 +1659,94 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    const historyButton =
-        document.getElementById(
-            "historyButton"
-        );
+    if (signUpButton) {
 
-
-    if (historyButton) {
-
-        historyButton.addEventListener(
+        signUpButton.addEventListener(
             "click",
-            showHistory
+            signUp
         );
 
     }
 
 
-    const todayButton =
-        document.getElementById(
-            "todayButton"
-        );
+    if (signInButton) {
 
-
-    if (todayButton) {
-
-        todayButton.addEventListener(
+        signInButton.addEventListener(
             "click",
-            returnToToday
+            signIn
         );
 
     }
 
 
-    const searchButton =
-        document.getElementById(
-            "searchButton"
-        );
+    if (signOutButton) {
 
-
-    if (searchButton) {
-
-        searchButton.addEventListener(
+        signOutButton.addEventListener(
             "click",
-            searchDevotions
+            signOut
         );
 
     }
 
 
-    const searchInput =
-        document.getElementById(
-            "searchInput"
-        );
+
+    /* ==================================================
+       监听登录状态变化
+    ================================================== */
+
+    supabaseClient
+        .auth
+        .onAuthStateChange(
+            async function (
+                event,
+                session
+            ) {
+
+                currentUser =
+                    session
+                        ? session.user
+                        : null;
 
 
-    if (searchInput) {
+                updateAuthUI();
 
-        searchInput.addEventListener(
-            "keydown",
-            function (event) {
 
-                if (
-                    event.key === "Enter"
-                ) {
+                if (currentUser) {
 
-                    searchDevotions();
+                    await loadTodayData();
+
+                    await loadHistory();
+
+                    renderCalendar();
+
+                } else {
+
+                    clearForm();
+
+                    renderEmptyHistory();
+
+                    renderCalendar();
 
                 }
 
             }
         );
 
-    }
 
 
+    /* ==================================================
+       初始化
+    ================================================== */
 
-    // =========================
-    // 初始化
-    // =========================
+    window.devotionRecords =
+        [];
 
-    loadTodayData();
 
     renderCalendar();
 
-    renderTagFilters();
+    updateAuthUI();
 
-    showHistory();
 
-    renderStats();
+    await checkUser();
 
 });
