@@ -96,6 +96,8 @@ body {
     min-height: 22px;
 
     margin-bottom: 0;
+
+    line-height: 1.6;
 }
 
 
@@ -250,6 +252,8 @@ button:disabled {
     margin-top: 15px;
 
     min-height: 22px;
+
+    line-height: 1.6;
 }
 
 
