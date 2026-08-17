@@ -19,331 +19,267 @@
 
 <body>
 
-
-<main class="container">
-
-
-    <!-- =========================
-         页面标题
-    ========================== -->
-
-    <header>
-
-        <p
-            class="date"
-            id="today"
-        ></p>
-
-        <h1>今日灵修</h1>
-
-        <p class="subtitle">
-            在主里面安静、思想、回应
-        </p>
-
-    </header>
+    <main class="container">
 
 
+        <!-- 登录区域 -->
 
-    <!-- =========================
-         登录区域
-    ========================== -->
+        <section class="auth-card">
 
-    <section
-        class="card auth-card"
-        id="authSection"
-    >
+            <h2>☁️ 我的灵修</h2>
 
-        <h2>☁️ 我的灵修</h2>
+            <div id="authLoggedOut">
 
-        <p
-            class="auth-status"
-            id="authStatus"
-        >
-            正在检查登录状态……
-        </p>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="邮箱"
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="密码"
+                >
+
+                <div class="auth-buttons">
+
+                    <button
+                        id="signUpButton"
+                        class="secondary-button"
+                    >
+                        注册账号
+                    </button>
+
+                    <button
+                        id="signInButton"
+                    >
+                        登录
+                    </button>
+
+                </div>
+
+            </div>
 
 
-        <div id="authForm">
-
-
-            <input
-                type="email"
-                id="email"
-                placeholder="请输入邮箱"
-                autocomplete="email"
+            <div
+                id="authLoggedIn"
+                style="display:none;"
             >
 
+                <p id="userEmail"></p>
 
-            <input
-                type="password"
-                id="password"
-                placeholder="请输入密码"
-                autocomplete="current-password"
-            >
+                <button
+                    id="signOutButton"
+                    class="secondary-button"
+                >
+                    退出登录
+                </button>
 
-
-            <button
-                id="signUpButton"
-                class="secondary-button"
-            >
-                注册账号
-            </button>
+            </div>
 
 
-            <button
-                id="signInButton"
-            >
-                登录
-            </button>
+            <p id="authMessage"></p>
 
+        </section>
+
+
+
+        <!-- 页面标题 -->
+
+        <header>
 
             <p
-                id="authMessage"
-                class="auth-message"
+                class="date"
+                id="today"
             ></p>
 
+            <h1>今日灵修</h1>
 
-        </div>
-
-
-        <div
-            id="loggedInArea"
-            class="logged-in-area hidden"
-        >
-
-            <p>
-                已登录：
-                <strong id="userEmail"></strong>
+            <p class="subtitle">
+                在主里面安静、思想、回应
             </p>
 
-            <button
-                id="signOutButton"
-                class="secondary-button"
+        </header>
+
+
+
+        <!-- 今日经文 -->
+
+        <section class="card">
+
+            <h2>今日经文</h2>
+
+            <input
+                type="text"
+                id="bibleReference"
+                placeholder="例如：以弗所书 6:10–20"
             >
-                退出登录
-            </button>
 
-        </div>
+            <textarea
+                id="bibleText"
+                placeholder="写下今天的经文……"
+            ></textarea>
 
-    </section>
+        </section>
 
 
 
-    <!-- =========================
-         日历
-    ========================== -->
+        <!-- 今日领受 -->
 
-    <section class="card calendar-card">
+        <section class="card">
 
-        <div class="calendar-header">
-
-            <button
-                id="prevMonthButton"
-                class="calendar-nav"
-            >
-                ‹
-            </button>
-
-            <h2 id="calendarTitle">
-                日历
+            <h2>
+                今天神让我看见什么？
             </h2>
 
-            <button
-                id="nextMonthButton"
-                class="calendar-nav"
-            >
-                ›
-            </button>
+            <textarea
+                id="reflection"
+                placeholder="写下你的领受……"
+            ></textarea>
 
-        </div>
-
-
-        <div class="calendar-weekdays">
-
-            <div>日</div>
-            <div>一</div>
-            <div>二</div>
-            <div>三</div>
-            <div>四</div>
-            <div>五</div>
-            <div>六</div>
-
-        </div>
-
-
-        <div
-            id="calendarGrid"
-            class="calendar-grid"
-        ></div>
-
-
-        <p class="calendar-hint">
-            点击有记录的日期，可以查看当天灵修。
-        </p>
-
-    </section>
+        </section>
 
 
 
-    <!-- =========================
-         今日经文
-    ========================== -->
+        <!-- 今日回应 -->
 
-    <section class="card">
+        <section class="card">
 
-        <h2>今日经文</h2>
+            <h2>
+                今天我要怎样回应？
+            </h2>
+
+            <textarea
+                id="response"
+                placeholder="写下今天的回应……"
+            ></textarea>
+
+        </section>
 
 
-        <input
-            type="text"
-            id="bibleReference"
-            placeholder="例如：以弗所书 6:10–20"
+
+        <!-- 今日祷告 -->
+
+        <section class="card">
+
+            <h2>今日祷告</h2>
+
+            <textarea
+                id="prayer"
+                placeholder="写下今天的祷告……"
+            ></textarea>
+
+        </section>
+
+
+
+        <!-- 今日学习 -->
+
+        <section class="card">
+
+            <h2>今天学到的</h2>
+
+            <textarea
+                id="learning"
+                placeholder="记录今天学习到的内容……"
+            ></textarea>
+
+        </section>
+
+
+
+        <!-- 日历 -->
+
+        <section class="calendar-card">
+
+            <div class="calendar-header">
+
+                <button
+                    id="prevMonth"
+                    class="calendar-nav"
+                >
+                    ‹
+                </button>
+
+                <h2 id="calendarTitle">
+                    2026年8月
+                </h2>
+
+                <button
+                    id="nextMonth"
+                    class="calendar-nav"
+                >
+                    ›
+                </button>
+
+            </div>
+
+
+            <div class="weekdays">
+
+                <div>日</div>
+                <div>一</div>
+                <div>二</div>
+                <div>三</div>
+                <div>四</div>
+                <div>五</div>
+                <div>六</div>
+
+            </div>
+
+
+            <div
+                id="calendarDays"
+                class="calendar-days"
+            ></div>
+
+
+            <p class="calendar-hint">
+                点击有记录的日期，可以查看当天灵修。
+            </p>
+
+        </section>
+
+
+
+        <!-- 保存按钮 -->
+
+        <button
+            id="saveButton"
+            class="save-button"
         >
-
-
-        <textarea
-            id="bibleText"
-            placeholder="写下今天的经文……"
-        ></textarea>
-
-    </section>
+            保存今天的灵修
+        </button>
 
 
 
-    <!-- =========================
-         今日领受
-    ========================== -->
+        <!-- 保存提示 -->
 
-    <section class="card">
-
-        <h2>
-            今天神让我看见什么？
-        </h2>
-
-
-        <textarea
-            id="reflection"
-            placeholder="写下你的领受……"
-        ></textarea>
-
-    </section>
+        <p id="message"></p>
 
 
 
-    <!-- =========================
-         今日回应
-    ========================== -->
+        <!-- 灵修历史 -->
 
-    <section class="card">
+        <section class="history-section">
 
-        <h2>
-            今天我要怎样回应？
-        </h2>
+            <h2>📖 灵修历史</h2>
+
+            <div id="historyList"></div>
+
+        </section>
 
 
-        <textarea
-            id="response"
-            placeholder="写下今天的回应……"
-        ></textarea>
-
-    </section>
+    </main>
 
 
 
-    <!-- =========================
-         今日祷告
-    ========================== -->
+    <!-- Supabase -->
 
-    <section class="card">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        <h2>
-            今日祷告
-        </h2>
-
-
-        <textarea
-            id="prayer"
-            placeholder="写下今天的祷告……"
-        ></textarea>
-
-    </section>
-
-
-
-    <!-- =========================
-         今日学习
-    ========================== -->
-
-    <section class="card">
-
-        <h2>
-            今天学到的
-        </h2>
-
-
-        <textarea
-            id="learning"
-            placeholder="记录今天学习到的内容……"
-        ></textarea>
-
-    </section>
-
-
-
-    <!-- =========================
-         保存按钮
-    ========================== -->
-
-    <button
-        id="saveButton"
-    >
-        保存今天的灵修
-    </button>
-
-
-    <p
-        id="message"
-    ></p>
-
-
-
-    <!-- =========================
-         历史记录
-    ========================== -->
-
-    <section
-        id="historySection"
-        class="history-section"
-    >
-
-        <h2>
-            📖 灵修历史
-        </h2>
-
-
-        <div
-            id="historyList"
-        ></div>
-
-    </section>
-
-
-</main>
-
-
-
-<!-- Supabase -->
-
-<script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-></script>
-
-
-<!-- 我们自己的 JavaScript -->
-
-<script
-    src="script.js"
-></script>
+    <script src="script.js"></script>
 
 
 </body>
